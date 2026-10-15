@@ -1,0 +1,11 @@
+# Frontend
+node_modules/
+dist/
+*.local
+.env
+
+# Backend (noch auszufüllen)
+
+
+# System
+.DS_Store
