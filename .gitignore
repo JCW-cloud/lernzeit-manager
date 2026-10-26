@@ -5,6 +5,10 @@ dist/
 .env
 
 # Backend (noch auszufüllen)
+#.NET
+**/bin/
+**/obj/
+
 # Lokale Konfiguration und Geheimnisse
 **/appsettings.Development.json
 **/appsettings.Local.json
