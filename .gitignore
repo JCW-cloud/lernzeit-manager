@@ -21,6 +21,8 @@ dist/
 .idea/
 *.user
 *.suo
+.vscode/launch.json
+.vscode/tasks.json
 
 # Zertifikate
 *.pfx
