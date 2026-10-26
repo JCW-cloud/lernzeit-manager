@@ -5,7 +5,28 @@ dist/
 .env
 
 # Backend (noch auszufüllen)
+#.NET
+**/bin/
+**/obj/
 
+# Lokale Konfiguration und Geheimnisse
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/appsettings.*.local.json
+**/.env
+**/.env.*
+
+# IDE-Dateien
+.vs/
+.idea/
+*.user
+*.suo
+.vscode/launch.json
+.vscode/tasks.json
+
+# Zertifikate
+*.pfx
+*.p12
 
 # System
 .DS_Store

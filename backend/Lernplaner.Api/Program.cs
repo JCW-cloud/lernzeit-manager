@@ -1,0 +1,59 @@
+using Lernplaner.Api.Data;
+using Lernplaner.Api.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Datenbankverbindung herstellen
+var connectionString =
+    builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException(
+        "Connection string 'DefaultConnection' wurde nicht konfiguriert.");
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseMySql(
+        connectionString,
+        ServerVersion.AutoDetect(connectionString)));
+
+// ASP.NET Core Identity
+builder.Services
+    .AddIdentityApiEndpoints<ApplicationUser>(options =>
+    {
+        options.User.RequireUniqueEmail = true;
+
+        options.Password.RequiredLength = 12;
+        options.Password.RequireDigit = true;
+        options.Password.RequireUppercase = true;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireNonAlphanumeric = false;
+    })
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddAuthorization();
+
+// Controller und OpenAPI
+builder.Services.AddControllers();
+builder.Services.AddOpenApi();
+
+var app = builder.Build();
+
+// HTTP-Pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+}
+
+app.UseHttpsRedirection();
+
+// Prüft Berechtigungen für Zugriff auf Endpoints
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
+
+// Identity-Endpunkte, z. B. Registrierung und Anmeldung
+app.MapGroup("/api/auth")
+    .MapIdentityApi<ApplicationUser>();
+
+app.Run();

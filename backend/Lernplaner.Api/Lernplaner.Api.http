@@ -1,0 +1,6 @@
+@Lernplaner.Api_HostAddress = http://localhost:5173
+
+GET {{Lernplaner.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
