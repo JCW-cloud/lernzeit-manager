@@ -116,6 +116,34 @@ public class UsersController : ControllerBase
     }
 
 
+    [HttpDelete("me")]
+    public async Task<IActionResult> DeleteMe()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId is null)
+            return Unauthorized();
+
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user is null)
+            return NotFound();
+
+        var result = await _userManager.DeleteAsync(user);
+
+        if (!result.Succeeded)
+        {
+            foreach (var error in result.Errors)
+                ModelState.AddModelError(error.Code, error.Description);
+
+            return ValidationProblem(ModelState);
+        }
+
+        return NoContent();
+    }
+
+
+
     public record UpdateProfileRequest(
         [Required]
         [StringLength(80, MinimumLength = 2)]
