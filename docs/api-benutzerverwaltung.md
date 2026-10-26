@@ -118,3 +118,14 @@ Bei Erfolg antwortet die API mit `204 No Content`. Das Löschen ist eine dauerha
 | `404 Not Found` | Angeforderte Ressource wurde nicht gefunden |
 
 Die tatsächlichen Statuscodes und Antwortformate sind im Rahmen der API-Tests zu überprüfen und gegebenenfalls zu ergänzen.
+
+## 9. Durchgeführte API-Tests
+
+| Test | Ergebnis | Info |
+| --- | --- | --- |
+| Login ohne User-Konto | HTTP/1.1 401 Unauthorized | |
+|Ungültigen Anzeigenamen setzen (weniger als 2 Zeichen)| HTTP/1.1 400 Bad Request |The field DisplayName must be a string with a minimum length of 2 and a maximum length of 80.|
+|Falsches Passwort bei Änderung|HTTP/1.1 400 Bad Request|"PasswordMismatch":["Incorrect password."]|
+|Anmeldung mit falschem Passwort|HTTP/1.1 401 Unauthorized| "detail":"Failed"|
+|Doppelte Registrierung|HTTP/1.1 400 Bad Request|"DuplicateUserName":["Username 'test@example.com' is already taken."|
+
