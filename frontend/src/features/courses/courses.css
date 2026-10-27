@@ -1,0 +1,83 @@
+.card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.card h2 {
+    margin: 0 0 16px;
+    font-size: 24px;
+}
+
+/* Formular */
+.course-form {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    align-items: end;
+}
+
+.course-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 14px;
+    color: #475569;
+}
+
+.course-form .wide {
+    grid-column: span 3;
+}
+
+.course-form input, 
+.course-form select {
+    padding: 8px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font: inherit;
+}
+
+.course-form button {
+    padding: 10px 16px;
+    background: #1f2937;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer
+}
+
+/* Liste */
+.course-list {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.course-list th,
+.course-list td {
+    text-align: left;
+    padding: 10px 8px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.course-list th {
+    font-size: 13px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.course-list tbody {
+    font-size: 13px;
+}
+
+.badge {
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+}
+
+.badge.open { background: #e0f2f0; color: #0369a1;}
+.badge.done { background: #dcfce7; color: #15803d; }
+
+.empty { color: #64748b; }
