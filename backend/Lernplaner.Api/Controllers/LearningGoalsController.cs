@@ -5,6 +5,7 @@ using Lernplaner.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 
 namespace Lernplaner.Api.Controllers;
 
@@ -122,6 +123,42 @@ public class LearningGoalsController : ControllerBase
         goal.StartDate = request.StartDate;
         goal.TargetDate = request.TargetDate;
         goal.TargetHours = request.TargetHours;
+
+        await _db.SaveChangesAsync(cancellationToken);
+
+        return Ok(ToResponse(goal));
+    }
+
+    [HttpPatch("{goalId:guid}/completion")]
+    public async Task<ActionResult<LearningGoalResponse>> SetCompletion(
+        Guid courseId,
+        Guid goalId,
+        [FromBody] SetCompletionRequest request,
+        CancellationToken cancellationToken)
+    {
+        if (!await OwnsCourse(courseId, cancellationToken))
+            return NotFound();
+
+        var goal = await _db.LearningGoals
+        .SingleOrDefaultAsync(
+            g => g.Id == goalId && g.CourseId == courseId,
+            cancellationToken);
+
+        if (goal is null)
+            return NotFound();
+
+        // Offen -> Abgeschlossen
+        if (request.IsCompleted == true && !goal.IsCompleted)
+        {
+            goal.IsCompleted = true;
+            goal.CompletedAtUtc = DateTime.UtcNow;
+        }
+        // Abgeschlossen -> Offen
+        else if (request.IsCompleted == false)
+        {
+            goal.IsCompleted = false;
+            goal.CompletedAtUtc = null;
+        }
 
         await _db.SaveChangesAsync(cancellationToken);
 
@@ -247,5 +284,10 @@ public class LearningGoalsController : ControllerBase
         decimal? TargetHours,
         bool IsCompleted,
         DateTime? CompletedAtUtc
+    );
+
+    public record SetCompletionRequest(
+        [Required]
+        bool? IsCompleted
     );
 }
