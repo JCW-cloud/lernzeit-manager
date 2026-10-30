@@ -127,12 +127,18 @@ namespace Lernplaner.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime?>("CompletedAtUtc")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<Guid>("CourseId")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateOnly>("StartDate")
                         .HasColumnType("date");
@@ -154,40 +160,6 @@ namespace Lernplaner.Api.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("LearningGoals");
-                });
-
-            modelBuilder.Entity("Lernplaner.Api.Models.Milestone", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime?>("CompletedAtUtc")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("varchar(1000)");
-
-                    b.Property<DateOnly?>("DueDate")
-                        .HasColumnType("date");
-
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<Guid>("LearningGoalId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LearningGoalId");
-
-                    b.ToTable("Milestones");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -344,17 +316,6 @@ namespace Lernplaner.Api.Migrations
                     b.Navigation("Course");
                 });
 
-            modelBuilder.Entity("Lernplaner.Api.Models.Milestone", b =>
-                {
-                    b.HasOne("Lernplaner.Api.Models.LearningGoal", "LearningGoal")
-                        .WithMany("Milestones")
-                        .HasForeignKey("LearningGoalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("LearningGoal");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -409,11 +370,6 @@ namespace Lernplaner.Api.Migrations
             modelBuilder.Entity("Lernplaner.Api.Models.Course", b =>
                 {
                     b.Navigation("LearningGoals");
-                });
-
-            modelBuilder.Entity("Lernplaner.Api.Models.LearningGoal", b =>
-                {
-                    b.Navigation("Milestones");
                 });
 #pragma warning restore 612, 618
         }

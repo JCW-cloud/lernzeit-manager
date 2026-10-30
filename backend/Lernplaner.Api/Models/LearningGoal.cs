@@ -25,6 +25,7 @@ public class LearningGoal
 
     public Course Course { get; set; } = null!;
 
-    // Zwischenziele
-    public ICollection<Milestone> Milestones { get; set; } = new List<Milestone>();
+    public bool IsCompleted { get; set; } = false;
+
+    public DateTime? CompletedAtUtc { get; set; }
 }

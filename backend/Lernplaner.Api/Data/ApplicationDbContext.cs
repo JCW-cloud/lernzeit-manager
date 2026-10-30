@@ -17,8 +17,6 @@ public class ApplicationDbContext
 
     public DbSet<LearningGoal> LearningGoals => Set<LearningGoal>();
 
-    public DbSet<Milestone> Milestones => Set<Milestone>();
-
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -40,14 +38,6 @@ public class ApplicationDbContext
 
             entity.Property(g => g.TargetHours)
             .HasPrecision(7, 2);
-        });
-
-        builder.Entity<Milestone>(entity =>
-        {
-            entity.HasOne(m => m.LearningGoal)
-            .WithMany(g => g.Milestones)
-            .HasForeignKey(m => m.LearningGoalId)
-            .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }
