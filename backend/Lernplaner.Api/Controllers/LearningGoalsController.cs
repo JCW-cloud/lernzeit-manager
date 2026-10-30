@@ -231,7 +231,7 @@ public class LearningGoalsController : ControllerBase
 
         DateOnly TargetDate,
 
-        [Range(typeof(decimal), "0.01", "99999.99")]
+        [Range(typeof(decimal), "0.01", "99999.99", ParseLimitsInInvariantCulture = true)]
         decimal? TargetHours
     );
 
