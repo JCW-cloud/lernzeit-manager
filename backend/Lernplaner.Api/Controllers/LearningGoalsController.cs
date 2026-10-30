@@ -34,7 +34,7 @@ public class LearningGoalsController : ControllerBase
             .OrderBy(g => g.TargetDate)
             .Select(g => new LearningGoalResponse(
                 g.Id, g.CourseId, g.Title, g.Description,
-                g.StartDate, g.TargetDate, g.TargetHours))
+                g.StartDate, g.TargetDate, g.TargetHours, g.IsCompleted, g.CompletedAtUtc))
             .ToListAsync(cancellationToken);
 
         return Ok(goals);
@@ -54,7 +54,7 @@ public class LearningGoalsController : ControllerBase
             .Where(g => g.Id == goalId && g.CourseId == courseId)
             .Select(g => new LearningGoalResponse(
                 g.Id, g.CourseId, g.Title, g.Description,
-                g.StartDate, g.TargetDate, g.TargetHours))
+                g.StartDate, g.TargetDate, g.TargetHours, g.IsCompleted, g.CompletedAtUtc))
             .SingleOrDefaultAsync(cancellationToken);
 
         if (goal is null)
@@ -216,7 +216,9 @@ public class LearningGoalsController : ControllerBase
             goal.Description,
             goal.StartDate,
             goal.TargetDate,
-            goal.TargetHours);
+            goal.TargetHours,
+            goal.IsCompleted,
+            goal.CompletedAtUtc);
     }
 
     public record LearningGoalRequest(
@@ -242,6 +244,8 @@ public class LearningGoalsController : ControllerBase
         string? Description,
         DateOnly StartDate,
         DateOnly TargetDate,
-        decimal? TargetHours
+        decimal? TargetHours,
+        bool IsCompleted,
+        DateTime? CompletedAtUtc
     );
 }
