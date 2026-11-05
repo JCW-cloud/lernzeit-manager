@@ -1,20 +1,21 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { login, errorText} from '../api/client';
-import { saveToken } from '../lib/auth';
+import { saveToken, isLoggedIn } from '../lib/auth';
 import '../features/auth/auth.css';
 
 
 export default function LoginPage() {
 
     const navigate = useNavigate();
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
     const [error, setError] = useState<string | null>(null);
-
     const [busy, setBusy] = useState(false);
+
+    if(isLoggedIn()){
+        return <Navigate to="/" replace />
+    }
 
     async function handleSubmit(event: React.FormEvent) {
 
@@ -26,7 +27,7 @@ export default function LoginPage() {
         try {
             const result = await login({ email: email, password: password });
             saveToken(result.accessToken);
-            navigate('/');
+            navigate('/', { replace: true });
         } catch (err) {
             setError(errorText(err));
         } finally {
@@ -34,6 +35,8 @@ export default function LoginPage() {
         }
 
     }
+
+    // Anzeige
 
     return(
         <div className="auth-page">
@@ -66,10 +69,6 @@ export default function LoginPage() {
                 <button type="submit" disabled={busy}>
                     {busy ? 'Anmelden...' : 'Anmelden'}
                 </button>
-
-                <p className="auth-switch">
-                    Noch kein Konto? <Link to="/registrieren">Registrieren</Link>
-                </p>
             </form>
         </div>
     );

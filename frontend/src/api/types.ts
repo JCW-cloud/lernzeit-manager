@@ -23,9 +23,6 @@ export interface LoginRequest {
     password: string;
 }
 
-// gleich wie login
-export type RegisterRequest = LoginRequest;
-
 export interface TokenResponse {
     tokenType: string;
     accessToken: string;

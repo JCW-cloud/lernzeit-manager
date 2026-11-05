@@ -1,5 +1,5 @@
 import { getToken,clearToken } from "../lib/auth";
-import type { LoginRequest,RegisterRequest,TokenResponse } from "./types";
+import type { LoginRequest, TokenResponse } from "./types";
 
 const BASE = '/api';
 
@@ -12,40 +12,50 @@ export class ApiError extends Error {
     }
 }
 
-// übersetzungstabelle
-const IDENTITY_MESSAGES: Record<string, string> = {
-    DuplicateUserName: 'Diese E-mail-Adresse ist bereits registriert.',
-    DuplicateEmail: 'Diese E-mail-Adresse ist bereits registriert.',
-    InvalidEmail: 'Ungültige E-mail.',
-    PasswordTooShort: 'Das Passwort benötigt mindestens 12 Zeichen.',
-    PasswordRequiresDigit: 'Das Passwort muss mindestens eine Zahl enthalten.',
-    PasswordRequiresUpper: 'Das Passwort muss mindestens einen Großbuchstaben enthalten.',
-    PasswordRequiresLower: 'Das Passwort muss mindestens einen Kleinbuchstaben enthalten.',
-};
 
-// 401: falsche login Daten
-function readErrorMessage(status: number, body: any): string {
-    if (status === 401){
-        return 'Email oder Passwort falsch.';
-    }
-    if (body !== null && body.errors !== undefined) {
-        const messages: string[] = [];
 
-        for (const key of Object.keys(body.errors)) {
-            const german = IDENTITY_MESSAGES[key];
+// Macht aus einer Fehlerantwort des Backends einen lesbaren Satz.
+function readErrorMessage(status: number, body: unknown): string {
 
-            if (german !== undefined) {
-                messages.push(german);
-            } else {
-                messages.push(...body.errors[key]);
-            }
+  // 401 = nicht angemeldet bzw. Login fehlgeschlagen
+  if (status === 401) {
+    return 'E-Mail oder Passwort falsch.';
+  }
+
+  // 500 und höher = Fehler im Server oder Server nicht erreichbar
+  if (status >= 500) {
+    return 'Server nicht erreichbar. Bitte später erneut versuchen.';
+  }
+
+  // Ist die Antwort ein Objekt, schauen wir hinein.
+  if (typeof body === 'object' && body !== null) {
+
+    const data = body as { errors?: Record<string, string[]>; detail?: string };
+
+    // Format 1: { errors: { courseTitle: ["Titel fehlt"] } }
+    const errors = data.errors;
+    if (errors !== undefined) {
+      const messages: string[] = [];
+
+      for (const field of Object.keys(errors)) {
+        for (const message of errors[field]) {
+          messages.push(message);
         }
+      }
+
+      if (messages.length > 0) {
         return messages.join(' ');
+      }
     }
-    if (body !== null && body.detail !== undefined) {
-        return body.detail;
+
+    // Format 2: { detail: "..." }
+    if (typeof data.detail === 'string') {
+      return data.detail;
     }
-    return 'Fehler ' + status;
+  }
+
+  // Nichts gefunden
+  return 'Unerwarteter Fehler (Status ' + status + ').';
 }
 
 export function errorText(error: unknown): string { 
@@ -64,7 +74,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
     const token = getToken();
     if (token !== null) {
-        headers['Authorisation'] = 'Bearer' + token;
+        headers['Authorization'] = 'Bearer ' + token;
     }
 
     // Anfrage abschicken
@@ -73,7 +83,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     // Antwort lesen
     const text = await response.text();
 
-    let body: any = null;
+    let body: unknown = null;
     if (text !== '') {
         try{
             body = JSON.parse(text);
@@ -87,7 +97,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
         const isLoginCall = path.startsWith('/auth/login');
         if (response.status === 401 && !isLoginCall) {
-            clearToken;
+            clearToken();
             window.location.assign('/login');
         }
 
@@ -107,13 +117,6 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
 export function login(data: LoginRequest): Promise<TokenResponse> {
     return request<TokenResponse>('/auth/login?useCookies=false', {
-        method: 'POST',
-        body: JSON.stringify(data),
-    });
-}
-
-export function register(data: RegisterRequest): Promise<void> {
-    return request<void>('/auth/register', {
         method: 'POST',
         body: JSON.stringify(data),
     });

@@ -1,21 +1,40 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { clearToken } from '../../lib/auth';
 import './Layout.css';
 
+// Aktuelle Seite
+function linkClass({ isActive }: { isActive: boolean}): string {
+    if(isActive) {
+        return 'nav-link active';
+    }
+    return 'nav-link';
+}
+
 export default function Layout() {
+    const navigate = useNavigate();
+
+    function handleLogout() {
+        clearToken();
+        navigate('/login', {replace: true});
+    }
+
+
     return(
-        <div className="Layout">
+        <>
             <nav className="nav">
-                <div className="nav-title">Lernzeit-Manager</div>
-                <NavLink to="/">Übersicht</NavLink>
-                <NavLink to="/kurse">Kurse</NavLink>
-                <NavLink to="/ziele">Ziele</NavLink>
-                <NavLink to="/planung">Grobplanung</NavLink>
-                <NavLink to="/kalender">Monatsplanung</NavLink>
-                <NavLink to="/timer">Timer</NavLink>
+                <span className="nav-title">Lernzeit-Manager</span>
+
+                <NavLink to="/" end className={linkClass}>Übersicht</NavLink>
+                <NavLink to="/kurse" className={linkClass}>Kurse</NavLink>
+                <NavLink to="/planung" className={linkClass}>Planen</NavLink>
+
+                <button className="nav-logout" onClick={handleLogout}>
+                    Abmelden
+                </button>
             </nav>
             <main className="content">
                 <Outlet />
             </main>
-        </div>
+        </>
     );
 }
