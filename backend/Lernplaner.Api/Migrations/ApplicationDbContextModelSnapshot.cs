@@ -105,6 +105,18 @@ namespace Lernplaner.Api.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("varchar(1000)");
 
+                    b.Property<int?>("ExamTry")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ExamType")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ExpectedTimeMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly?>("TargetDate")
+                        .HasColumnType("date");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(150)
