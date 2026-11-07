@@ -25,3 +25,8 @@ public class Course
     // Ein Kurs kann mehrere Lernziele haben.
     public ICollection<LearningGoal> LearningGoals { get; set; } = new List<LearningGoal>();
 }
+
+
+// TargetDate
+//Prüfungsart
+// Aufwand

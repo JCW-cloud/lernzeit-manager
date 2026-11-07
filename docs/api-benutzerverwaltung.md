@@ -6,7 +6,7 @@ Die Backend-API basiert auf ASP.NET Core Web API und verwendet ASP.NET Core Iden
 
 - **Datenformat:** JSON
 - **Authentifizierung:** Bearer-Token
-- **Basis-URL:** `http://localhost:<PORT>`
+- **Basis-URL:** `http://localhost:5000`
 - **Zeichensatz:** UTF-8
 
 Der tatsächliche Port ist der Konsolenausgabe der laufenden API zu entnehmen.
