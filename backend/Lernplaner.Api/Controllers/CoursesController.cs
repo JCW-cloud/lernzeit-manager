@@ -202,7 +202,7 @@ public class CoursesController : ControllerBase
 
         ExamType? ExamType,
 
-        [Range(1, 10)]
+        [Range(1, 3)]
         int? ExamTry,
 
         [Range(1, 100000)]
@@ -224,7 +224,7 @@ public class CoursesController : ControllerBase
 
         ExamType? ExamType,
 
-        [Range(1, 10)]
+        [Range(1, 3)]
         int? ExamTry,
 
         [Range(1, 100000)]
