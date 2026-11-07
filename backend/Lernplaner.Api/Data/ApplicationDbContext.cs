@@ -17,6 +17,8 @@ public class ApplicationDbContext
 
     public DbSet<LearningGoal> LearningGoals => Set<LearningGoal>();
 
+    public DbSet<PlannedStudySession> PlannedStudySessions { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -39,5 +41,11 @@ public class ApplicationDbContext
             entity.Property(g => g.TargetHours)
             .HasPrecision(7, 2);
         });
+
+        builder.Entity<PlannedStudySession>()
+        .HasOne(p => p.Course)
+        .WithMany()
+        .HasForeignKey(p => p.CourseId)
+        .OnDelete(DeleteBehavior.Cascade);
     }
 }
