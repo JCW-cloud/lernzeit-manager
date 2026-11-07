@@ -34,7 +34,11 @@ public class CoursesController : ControllerBase
             c.Id,
             c.Title,
             c.Description,
-            c.CreatedAtUtc))
+            c.CreatedAtUtc,
+            c.TargetDate,
+            c.ExamType,
+            c.ExamTry,
+            c.ExpectedTimeMinutes))
         .ToListAsync(cancellationToken);
 
         return Ok(courses);
@@ -55,7 +59,11 @@ public class CoursesController : ControllerBase
             c.Id,
             c.Title,
             c.Description,
-            c.CreatedAtUtc))
+            c.CreatedAtUtc,
+            c.TargetDate,
+            c.ExamType,
+            c.ExamTry,
+            c.ExpectedTimeMinutes))
         .SingleOrDefaultAsync(cancellationToken);
 
         if (course is null)
@@ -88,7 +96,11 @@ public class CoursesController : ControllerBase
         {
             Title = request.Title.Trim(),
             Description = request.Description?.Trim(),
-            UserId = userId
+            UserId = userId,
+            TargetDate = request.TargetDate,
+            ExamType = request.ExamType,
+            ExamTry = request.ExamTry,
+            ExpectedTimeMinutes = request.ExpectedTimeMinutes
         };
 
         _db.Courses.Add(course);
@@ -98,7 +110,11 @@ public class CoursesController : ControllerBase
             course.Id,
             course.Title,
             course.Description,
-            course.CreatedAtUtc);
+            course.CreatedAtUtc,
+            course.TargetDate,
+            course.ExamType,
+            course.ExamTry,
+            course.ExpectedTimeMinutes);
 
         return CreatedAtAction(
             nameof(GetCourse),
@@ -110,7 +126,7 @@ public class CoursesController : ControllerBase
     [HttpPut("{id:guid}")]
     public async Task<ActionResult<CourseResponse>> UpdateCourse(
         Guid id,
-        UpdateCourseRequest request,
+        [FromBody] UpdateCourseRequest request,
         CancellationToken cancellationToken)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -134,7 +150,10 @@ public class CoursesController : ControllerBase
 
         course.Title = request.Title.Trim();
         course.Description = request.Description?.Trim();
-
+        course.TargetDate = request.TargetDate;
+        course.ExamType = request.ExamType;
+        course.ExamTry = request.ExamTry;
+        course.ExpectedTimeMinutes = request.ExpectedTimeMinutes;
 
         await _db.SaveChangesAsync(cancellationToken);
 
@@ -142,7 +161,11 @@ public class CoursesController : ControllerBase
             course.Id,
             course.Title,
             course.Description,
-            course.CreatedAtUtc));
+            course.CreatedAtUtc,
+            course.TargetDate,
+            course.ExamType,
+            course.ExamTry,
+            course.ExpectedTimeMinutes));
     }
 
     // DELETE /api/courses/{id}
@@ -173,7 +196,21 @@ public class CoursesController : ControllerBase
         string Title,
 
         [StringLength(1000)]
-        string? Description);
+        string? Description,
+
+        DateOnly? TargetDate,
+
+        ExamType? ExamType,
+
+        [Range(1, 3)]
+        int? ExamTry,
+
+        [Range(1, 100000)]
+        int? ExpectedTimeMinutes
+
+        );
+
+
 
     public record UpdateCourseRequest(
         [Required]
@@ -181,11 +218,28 @@ public class CoursesController : ControllerBase
         string Title,
 
         [StringLength(1000)]
-        string? Description);
+        string? Description,
+
+        DateOnly? TargetDate,
+
+        ExamType? ExamType,
+
+        [Range(1, 3)]
+        int? ExamTry,
+
+        [Range(1, 100000)]
+        int? ExpectedTimeMinutes
+
+        );
 
     public record CourseResponse(
         Guid Id,
         string Title,
         string? Description,
-        DateTime CreatedAtUtc);
+        DateTime CreatedAtUtc,
+        DateOnly? TargetDate,
+        ExamType? ExamType,
+        int? ExamTry,
+        int? ExpectedTimeMinutes
+        );
 }

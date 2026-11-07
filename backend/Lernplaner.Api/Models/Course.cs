@@ -15,6 +15,14 @@ public class Course
 
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
 
+    public DateOnly? TargetDate { get; set; }
+
+    public ExamType? ExamType { get; set; }
+
+    public int? ExamTry { get; set; }
+
+    public int? ExpectedTimeMinutes { get; set; }
+
     // Jeder Kurs hat einen Besitzer
     [Required]
     public string UserId { get; set; } = string.Empty;
@@ -25,8 +33,3 @@ public class Course
     // Ein Kurs kann mehrere Lernziele haben.
     public ICollection<LearningGoal> LearningGoals { get; set; } = new List<LearningGoal>();
 }
-
-
-// TargetDate
-//Prüfungsart
-// Aufwand
