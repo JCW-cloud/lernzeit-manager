@@ -1,83 +1,128 @@
-.card {
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 24px;
-    margin-bottom: 24px;
+
+.courses-page h1 {
+    margin: 0 0 16px 0;
 }
 
-.card h2 {
-    margin: 0 0 16px;
-    font-size: 24px;
+.courses-status {
+    color: #6b7280;
 }
 
 /* Formular */
 .course-form {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+    grid-template-columns: 3fr 1fr 1.3fr 1.3fr 1fr auto;
+    gap: 12px;
     align-items: end;
+    padding: 20px;
+    margin-bottom: 24px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
 }
 
 .course-form label {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    font-size: 14px;
-    color: #475569;
-}
-
-.course-form .wide {
-    grid-column: span 3;
-}
-
-.course-form input, 
-.course-form select {
-    padding: 8px;
-    border: 1px solid #cbd5e1;
-    border-radius: 10px;
-    font: inherit;
-}
-
-.course-form button {
-    padding: 10px 16px;
-    background: #1f2937;
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer
-}
-
-/* Liste */
-.course-list {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.course-list th,
-.course-list td {
-    text-align: left;
-    padding: 10px 8px;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-.course-list th {
-    font-size: 13px;
-    color: #64748b;
+    gap: 6px;
+    font-size: 16px;
     font-weight: 500;
 }
 
-.course-list tbody {
-    font-size: 13px;
+.course-form input,
+.course-form select {
+    padding: 8px 10px;
+    font-size: 15px;
+    font-family: inherit;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background: #ffffff;
 }
 
-.badge {
-    padding: 2px 8px;
-    border-radius: 999px;
-    font-size: 12px;
+.course-form input:focus,
+.course-form select:focus {
+  outline: none;
+  border-color: #007c59;
 }
 
-.badge.open { background: #e0f2f0; color: #0369a1;}
-.badge.done { background: #dcfce7; color: #15803d; }
+.course-form button {
+  padding: 9px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  background: #007c59;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
 
-.empty { color: #64748b; }
+.course-form button:disabled {
+  background: #7ebcab;
+  cursor: not-allowed;
+}
+
+.course-form-error {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #b91c1c;
+  background: #fee2e2;
+  border-radius: 6px;
+}
+
+/* Kurs Karten */
+
+.course-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.course-card {
+    padding: 20px 40px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+}
+
+.course-card-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.course-card-header h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.course-card-meta {
+  font-size: 16px;
+  color: #6b7280;
+}
+
+.course-card-empty {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+.course-card-final {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+  font-weight: 600;
+}
+
+.course-card-diamond {
+  color: #007c59;
+}
+
+.course-card-date {
+  margin-left: auto;
+  font-weight: 400;
+}
+

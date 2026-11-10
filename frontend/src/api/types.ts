@@ -1,21 +1,34 @@
 
 // ------------ Kurse ----------------
+
+// Erlaubte Prüfungsarten
+export type ExamType = 
+    | 'WrittenExam' // Klausur
+    | 'ModuleExam'  // Modulprüfung
+    | 'Workbook'    // Workbook
+    | 'TermPaper'   // Hausarbeit
+    | 'Thesis';     //Abschlussarbeit
+
+
 export interface Course {
-    id: number;
-    listId: number;
-    courseTitle: string;
-    courseShortName: string;
-    creationDate: string;
-    examType: string;
-    examPassed: boolean;
-    examTry: string;
-    grade: number | null;
+    id: string;
+    title: string;
+    description: string | null;    // Im Frontend als Kürzel
+    createdAtUtc: string;
+    targetDate: string | null;
+    examType: ExamType | null;
+    examTry: number | null;
+    expectedTimeMinutes: number | null; // Aufwand in Minuten
 }
 
-export type CourseInput = Pick<
-    Course,
-    'courseTitle' | 'courseShortName' | 'examType' | 'examTry'
->;
+export interface CourseInput {
+    title: string;
+    description: string | null;
+    targetDate: string | null;
+    examType: ExamType | null;
+    examTry: number | null;
+    expectedTimeMinutes: number | null;
+}
 
 // -------------- Auth ---------------
 export interface LoginRequest {
