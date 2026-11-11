@@ -63,5 +63,4 @@ export const realApi = {
         method: 'DELETE',
         });
     },
-
 }
