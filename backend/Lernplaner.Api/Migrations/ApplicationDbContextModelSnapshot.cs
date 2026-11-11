@@ -203,6 +203,43 @@ namespace Lernplaner.Api.Migrations
                     b.ToTable("PlannedStudySessions");
                 });
 
+            modelBuilder.Entity("Lernplaner.Api.Models.StudySession", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("AccumulatedSeconds")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("CurrentRunStartedAtUtc")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("EndedAtUtc")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("StartedAtUtc")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("StudySessions");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -358,6 +395,17 @@ namespace Lernplaner.Api.Migrations
                 });
 
             modelBuilder.Entity("Lernplaner.Api.Models.PlannedStudySession", b =>
+                {
+                    b.HasOne("Lernplaner.Api.Models.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+                });
+
+            modelBuilder.Entity("Lernplaner.Api.Models.StudySession", b =>
                 {
                     b.HasOne("Lernplaner.Api.Models.Course", "Course")
                         .WithMany()

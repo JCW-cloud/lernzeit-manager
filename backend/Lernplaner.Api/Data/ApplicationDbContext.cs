@@ -19,6 +19,8 @@ public class ApplicationDbContext
 
     public DbSet<PlannedStudySession> PlannedStudySessions { get; set; }
 
+    public DbSet<StudySession> StudySessions { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -46,6 +48,12 @@ public class ApplicationDbContext
         .HasOne(p => p.Course)
         .WithMany()
         .HasForeignKey(p => p.CourseId)
+        .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<StudySession>()
+        .HasOne(s => s.Course)
+        .WithMany()
+        .HasForeignKey(s => s.CourseId)
         .OnDelete(DeleteBehavior.Cascade);
     }
 }
