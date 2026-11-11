@@ -1,74 +1,136 @@
 import { useState } from 'react';
-import type { CourseInput } from '../../api/types';
+import { api } from '../../api';
+import { errorText } from '../../api/client';
+import type { Course, CourseInput, ExamType } from '../../api/types';
+import { EXAM_TYPES, EXAM_TYPE_LABELS } from './examTypes';
+import { addMonths, toIsoDate } from '../../lib/format';
 
-const EXAM_TYPES = ['Klausur', 'Hausarbeit', 'Seminararbeit', 'Projektbericht', 'Fallstudie', 'Portfolio']
-const EXAM_TRY = ['Erstversuch', 'Zweitversuch', 'Drittversuch'];
 
-const emptyForm: CourseInput = {
-    courseTitle: '',
-    courseShortName: '',
-    examType: EXAM_TYPES[0],
-    examTry: EXAM_TRY[0],
-};
+interface CourseFormProps {
+    onCreated: (course: Course) => void;
+}
 
-type Props = {
-    onSubmit: (input: CourseInput) => void;
-};
+export default function CourseForm({ onCreated }: CourseFormProps) {
+    const [title, setTitle] = useState('');
+    const [shortName, setShortName] = useState('');
+    const [examType, setExamType] = useState('');
+    const [targetDate, setTargetDate] = useState('');
+    const [hours, setHours] = useState('');
+    const [error, setError] = useState<string | null>(null);
+    const [busy, setBusy] = useState(false);
+    
+    const minDate = toIsoDate(new Date());
+    const maxDate = addMonths(6);
 
-export default function CourseForm({ onSubmit }: Props) {
-    const [form, setForm] = useState<CourseInput>(emptyForm);
-
-    function updateField<K extends keyof CourseInput>(key: K, value: CourseInput[K]) {
-        setForm({ ...form, [key]: value});
-    }
-
-    function handleSubmit(event: React.FormEvent) {
+    // Absenden
+    async function handleSubmit(event: React.FormEvent) {
         event.preventDefault();
-        onSubmit(form);
-        setForm(emptyForm);
+        setError(null);
+        setBusy(true);
+    
+
+        let minutes: number | null = null;
+        if(hours !== ''){
+            minutes = Math.round(Number(hours) * 60);
+        }
+
+        let exam: ExamType | null = null;
+        if (examType !== '') {
+            exam = examType as ExamType;
+        }
+
+        const input: CourseInput = {
+            title: title,
+            description: shortName,
+            targetDate: targetDate,
+            examType: exam,
+            examTry: null,
+            expectedTimeMinutes: minutes,
+        };
+
+        try {
+            const created = await api.createCourse(input);
+            onCreated(created);
+
+            // Form leeren
+            setTitle('');
+            setShortName('');
+            setExamType('');
+            setTargetDate('');
+            setHours('');
+        } catch (err) {
+            setError(errorText(err));
+        } finally {
+            setBusy(false);
+        }
     }
 
+    // Anzeige
     return(
         <form className="course-form" onSubmit={handleSubmit}>
             <label>
-                Kürzel
+                Titel
                 <input
-                    value={form.courseShortName}
-                    onChange={event => updateField('courseShortName', event.target.value)}
+                    type="text"
+                    value={title}
                     required
+                    maxLength={150}
+                    placeholder="z.B. Software Engineering"
+                    onChange={event => setTitle(event.target.value)}
                 />
             </label>
             <label className="wide">
-                Kurstitel
+                Kürzel
                 <input
-                    value={form.courseTitle}
-                    onChange={event => updateField('courseTitle', event.target.value)}
-                    required
+                    type="text"
+                    value={shortName}
+                    maxLength={20}
+                    placeholder="z.B. ISSE01"
+                    onChange={event => setShortName(event.target.value)}
                 />
             </label>
             <label>
                 Prüfungsart
                 <select
-                    value={form.examType}
-                    onChange={event => updateField('examType', event.target.value)}
+                    value={examType}
+                    onChange={event => setExamType(event.target.value)}
                 >
+                    <option value="">–</option>
                     {EXAM_TYPES.map(type => (
-                        <option key={type}>{type}</option>
+                        <option key={type} value={type}>
+                            {EXAM_TYPE_LABELS[type]}
+                        </option>
                     ))}
                 </select>
             </label>
             <label>
-                Versuch
-                <select
-                    value={form.examTry}
-                    onChange={event => updateField('examTry', event.target.value)}
-                >
-                    {EXAM_TRY.map(attempt =>(
-                        <option key={attempt}>{attempt}</option>
-                    ))}
-                </select>
+                Zieldatum
+                <input
+                    type="date"
+                    value={targetDate}
+                    required
+                    min={minDate}
+                    max={maxDate}
+                    onChange={event => setTargetDate(event.target.value)}
+                />
             </label>
-            <button type="submit">Kurs anlegen</button>
+            <label>
+                Aufwand (h)
+                <input
+                    type="number"
+                    value={hours}
+                    min={0.5}
+                    max={1666}
+                    step={0.5}
+                    placeholder="z.B. 150"
+                    onChange={event => setHours(event.target.value)}
+                />
+            </label>
+
+            <button type="submit" disabled={busy}>
+                {busy ? 'Speichern...' : 'Kurs anlegen'}
+            </button>
+            {error !== null && <p className="form-error">{error}</p>}
         </form>
     );
 }

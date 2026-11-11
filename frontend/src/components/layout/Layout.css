@@ -4,7 +4,7 @@
     align-items: center;
     gap: 4px;
     padding: 20px 32px;
-    background: #d0ffd7;
+    background: #ffffff;
 }
 
 .nav-title {
@@ -23,12 +23,12 @@
 }
 
 .nav-link:hover {
-    background: #8fc798;
+    background: #bfc0bf;
 }
 
 .nav-link.active {
-    background: #eef4ee;
-    color: #000000;
+    background: #007c59;
+    color: #ffffff;
 }
 
 .nav-logout {
