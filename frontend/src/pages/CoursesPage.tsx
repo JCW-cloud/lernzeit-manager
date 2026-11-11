@@ -30,15 +30,32 @@ export default function CoursesPage(){
         load();
     }, []);
 
-    // neuer Kurs
+    // ---------- Änderungen aus Formular und Karten ---------------------
     function handleCreated(course: Course) {
-        setCourses(sortByTitle([...courses, course]));
+        setCourses(prev => sortByTitle([...prev, course]));
     }
 
-    // Anzeige
+    function handleUpdated(updated: Course) {
+        setCourses(prev => {
+            const replaced = prev.map(course => {
+                if (course.id === updated.id) {
+                    return updated;
+                }
+                return course;
+            });
+            // Neu sortieren, falls sich der Titel geändert hat
+            return sortByTitle(replaced);
+        });
+    }
+
+    function handleDeleted(courseId: string) {
+        setCourses(prev => prev.filter(course => course.id !== courseId));
+    }
+
+    // --------------- Anzeige -------------------
     let content;
     if(loading) {
-        content = <p className="courses-status">Kurse werden geladen</p>
+        content = <p className="courses-status">Kurse werden geladen ...</p>
     } else if (error !== null) {
         content = <p className="courses-status">{error}</p>
     } else if (courses.length === 0) {
@@ -47,7 +64,12 @@ export default function CoursesPage(){
         content = (
             <div className="course-list">
                 {courses.map(course => (
-                    <CourseCard key={course.id} course={course} />
+                    <CourseCard 
+                        key={course.id} 
+                        course={course}
+                        onUpdated={handleUpdated}
+                        onDeleted={handleDeleted}
+                    />
                 ))}
             </div>
         );

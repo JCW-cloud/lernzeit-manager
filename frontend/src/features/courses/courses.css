@@ -20,7 +20,8 @@
     border-radius: 10px;
 }
 
-.course-form label {
+.course-form label,
+.course-edit label {
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -29,7 +30,10 @@
 }
 
 .course-form input,
-.course-form select {
+.course-form select,
+.course-edit input,
+.course-edit select,
+.goal-form input {
     padding: 8px 10px;
     font-size: 15px;
     font-family: inherit;
@@ -39,35 +43,77 @@
 }
 
 .course-form input:focus,
-.course-form select:focus {
-  outline: none;
-  border-color: #007c59;
+.course-form select:focus,
+.course-edit input:focus,
+.course-edit select:focus,
+.goal-form input:focus {
+    outline: none;
+    border-color: #007c59;
 }
 
-.course-form button {
-  padding: 9px 16px;
-  font-size: 15px;
-  font-weight: 600;
-  color: #ffffff;
-  background: #007c59;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
+.course-form button,
+.btn-primary {
+    padding: 9px 16px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    background: #007c59;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
 }
 
-.course-form button:disabled {
-  background: #7ebcab;
-  cursor: not-allowed;
+.btn-secondary {
+    padding: 8px 16px;
+    font-size: 16px;
+    color: #374151;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    cursor: pointer;
 }
 
-.course-form-error {
-  grid-column: 1 / -1;
-  margin: 0;
-  padding: 8px 12px;
-  font-size: 14px;
-  color: #b91c1c;
-  background: #fee2e2;
-  border-radius: 6px;
+.btn-danger {
+    padding: 8px 16px;
+    font-size: 16px;
+    color: #ffffff;
+    background: #b91c1c;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.course-form button:disabled,
+.btn-primary:disabled,
+.btn-secondary:disabled,
+.btn-danger:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.icon-button {
+    padding: 2px 8px;
+    font-size: 18px;
+    color: #6b7280;
+    background: none;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.icon-button:hover {
+    color: #111827;
+    background: #f3f4f6;
+}
+
+.form-error {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #b91c1c;
+    background: #fee2e2;
+    border-radius: 6px;
 }
 
 /* Kurs Karten */
@@ -86,43 +132,144 @@
 }
 
 .course-card-header {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  margin-bottom: 12px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 12px;
 }
 
 .course-card-header h2 {
-  margin: 0;
-  font-size: 24px;
+    margin: 0;
+    font-size: 24px;
 }
 
 .course-card-meta {
+    font-size: 16px;
+    color: #6b7280;
+}
+
+.course-card-progress {
+  margin-left: auto;
   font-size: 16px;
   color: #6b7280;
 }
 
+.course-card-edit {
+  align-self: center;
+}
+
+.course-card-header .course-card-progress + .course-card-edit {
+  margin-left: 0;
+}
+
+.course-card-header .course-card-edit:only-of-type {
+  margin-left: auto;
+}
+
 .course-card-empty {
-  margin: 0 0 12px 0;
-  font-size: 14px;
-  color: #9ca3af;
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    color: #9ca3af;
 }
 
 .course-card-final {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding-top: 12px;
-  border-top: 1px solid #e5e7eb;
-  font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid #e5e7eb;
+    font-weight: 600;
 }
 
 .course-card-diamond {
-  color: #007c59;
+    color: #007c59;
 }
 
 .course-card-date {
-  margin-left: auto;
-  font-weight: 400;
+    margin-left: auto;
+    font-weight: 400;
+}
+
+.course-edit {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1.3fr 1fr;
+    gap: 12px;
+    align-items: end;
+    margin-bottom: 12px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.course-edit-footer {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.course-edit-date {
+    margin-right: auto;
+    font-size: 16px;
+    color: #6b7280;
+}
+
+/* =========================== Zwischenziele =============================== */
+.goal-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.goal-row {
+    display: grid;
+    grid-template-columns: 24px 1fr 70px 70px 32px;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 0;
+    font-size: 17px;
+}
+
+.goal-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #007c59;
+    cursor: pointer;
+}
+
+.goal-hours {
+    text-align: right;
+    font-size: 16px;
+    color: #6b7280;
+}
+
+.goal-date {
+    text-align: right;
+}
+
+.goal-row.overdue .goal-date {
+    color: #b91c1c;
+    font-weight: 600;
+}
+
+.goal-add {
+    align-self: flex-start;
+    padding: 6px 0;
+    font-size: 16px;
+    color: #6b7280;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.goal-add:hover {
+    color: #007c59;
+}
+
+.goal-form {
+    display: grid;
+    grid-template-columns: 1fr 80px 150px auto auto;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
 }
 

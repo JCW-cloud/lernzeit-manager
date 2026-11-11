@@ -30,7 +30,29 @@ export interface CourseInput {
     expectedTimeMinutes: number | null;
 }
 
-// -------------- Auth ---------------
+// ------------Lernziele/Zwischenziele----------
+export interface LearningGoal {
+    id: string;
+    courseId: string;
+    title: string;
+    description: string | null;  // im Frontend nicht verwendet
+    startDate: string;           // schickt "heute"
+    targetDate: string;          // Zieldatum des Zwischenziels
+    targetHours: number | null;  // Aufwand in STUNDEN
+    isCompleted: boolean;        // abgehakt?
+    completedAtUtc: string | null;
+}
+
+export interface LearningGoalInput {
+    title: string;
+    description: string | null;
+    startDate: string;
+    targetDate: string;
+    targetHours: number | null;
+}
+
+
+// ------------------- Auth --------------------
 export interface LoginRequest {
     email: string;
     password: string;

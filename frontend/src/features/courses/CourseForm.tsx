@@ -3,6 +3,7 @@ import { api } from '../../api';
 import { errorText } from '../../api/client';
 import type { Course, CourseInput, ExamType } from '../../api/types';
 import { EXAM_TYPES, EXAM_TYPE_LABELS } from './examTypes';
+import { addMonths, toIsoDate } from '../../lib/format';
 
 
 interface CourseFormProps {
@@ -18,6 +19,9 @@ export default function CourseForm({ onCreated }: CourseFormProps) {
     const [error, setError] = useState<string | null>(null);
     const [busy, setBusy] = useState(false);
     
+    const minDate = toIsoDate(new Date());
+    const maxDate = addMonths(6);
+
     // Absenden
     async function handleSubmit(event: React.FormEvent) {
         event.preventDefault();
@@ -30,11 +34,6 @@ export default function CourseForm({ onCreated }: CourseFormProps) {
             minutes = Math.round(Number(hours) * 60);
         }
 
-        let date: string | null = null;
-        if (targetDate !== '') {
-            date = targetDate;
-        }
-
         let exam: ExamType | null = null;
         if (examType !== '') {
             exam = examType as ExamType;
@@ -43,7 +42,7 @@ export default function CourseForm({ onCreated }: CourseFormProps) {
         const input: CourseInput = {
             title: title,
             description: shortName,
-            targetDate: date,
+            targetDate: targetDate,
             examType: exam,
             examTry: null,
             expectedTimeMinutes: minutes,
@@ -109,6 +108,9 @@ export default function CourseForm({ onCreated }: CourseFormProps) {
                 <input
                     type="date"
                     value={targetDate}
+                    required
+                    min={minDate}
+                    max={maxDate}
                     onChange={event => setTargetDate(event.target.value)}
                 />
             </label>
@@ -117,9 +119,9 @@ export default function CourseForm({ onCreated }: CourseFormProps) {
                 <input
                     type="number"
                     value={hours}
-                    min={1}
+                    min={0.5}
                     max={1666}
-                    step={1}
+                    step={0.5}
                     placeholder="z.B. 150"
                     onChange={event => setHours(event.target.value)}
                 />
@@ -128,7 +130,7 @@ export default function CourseForm({ onCreated }: CourseFormProps) {
             <button type="submit" disabled={busy}>
                 {busy ? 'Speichern...' : 'Kurs anlegen'}
             </button>
-            {error !== null && <p className="course-form-error">{error}</p>}
+            {error !== null && <p className="form-error">{error}</p>}
         </form>
     );
 }

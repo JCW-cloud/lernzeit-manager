@@ -65,7 +65,7 @@ export function errorText(error: unknown): string {
     return 'Server nicht erreichbar.';
 }
 
-async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+export async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     
     // header bauen
     const headers: Record<string, string> = {
