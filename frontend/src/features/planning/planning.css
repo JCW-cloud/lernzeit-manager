@@ -1,0 +1,97 @@
+
+/* ================= Seite ================= */
+
+.planning-page h1 {
+    margin: 0 0 24px 0;
+}
+
+.planning-page h2 {
+    margin: 32px 0 16px 0;
+}
+
+.planning-status {
+    color: #6b7280;
+}
+
+/* ================= Grobplanung ================= */
+
+.rough-plan {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;   /* runde Ecken auch für den Inhalt */
+}
+
+.rough-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr) 110px;
+    grid-template-rows: auto;
+    align-items: stretch;
+}
+
+.rough-row > * {
+    grid-row: 1;
+}
+
+.rough-cell {
+    border-left: 1px solid #e5e7eb;
+}
+
+.rough-cell:first-child {
+    border-left: none;
+}
+
+.rough-head {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.rough-head .rough-cell {
+    padding: 12px 8px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;   /* "Nov. 26" → "NOV. 26" */
+    color: #6b7280;
+}
+
+.rough-total {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: #007c59;
+}
+
+.rough-head .rough-total {
+    color: #6b7280;
+}
+
+.rough-bar {
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    margin: 8px 6px;
+    padding: 6px 12px;
+    background: #e6f2ee;
+    border: 1px solid #9fd3bf;
+    border-radius: 8px;
+}
+
+.rough-bar-title,
+.rough-bar-sub {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.rough-bar-title {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.rough-bar-sub {
+    font-size: 13px;
+    color: #6b7280;
+}
