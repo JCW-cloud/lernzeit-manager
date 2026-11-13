@@ -1,6 +1,10 @@
 
 import { request } from "./client";
-import type { Course, CourseInput, LearningGoal, LearningGoalInput } from './types';
+import type { Course, CourseInput, LearningGoal, LearningGoalInput, StudySession } from './types';
+
+function sessionsPath(courseId: string): string {
+    return '/courses/' + courseId + '/study-sessions';
+}
 
 export const realApi = {
 
@@ -63,4 +67,44 @@ export const realApi = {
         method: 'DELETE',
         });
     },
-}
+
+    // =============================== Lernzeiten ===========================
+    // GET
+    getStudySessions(courseId: string): Promise<StudySession[]> {
+        return request<StudySession[]>(sessionsPath(courseId));
+    },
+
+    // POST manual
+    createManualSession(courseId: string, minutes: number): Promise<StudySession> {
+        return request<StudySession>(sessionsPath(courseId) + '/manual', {
+            method: 'POST',
+            body: JSON.stringify({ minutes: minutes }),
+        });
+    },
+
+    // POST auto
+    startTimer(courseId: string): Promise<StudySession> {
+        return request<StudySession>(sessionsPath(courseId) + '/timer/start', {
+            method: 'POST',
+        });
+    },
+
+    pauseTimer(courseId: string, id: string): Promise<StudySession> {
+        return request<StudySession>(sessionsPath(courseId) + '/' + id + '/pause', {
+            method: 'PATCH',
+        });
+    },
+
+    resumeTimer(courseId: string, id: string): Promise<StudySession> {
+        return request<StudySession>(sessionsPath(courseId) + '/' + id + '/resume', {
+            method: 'PATCH',
+        });
+    },
+
+    stopTimer(courseId: string, id: string): Promise<StudySession> {
+        return request<StudySession>(sessionsPath(courseId) + '/' + id + '/stop', {
+            method: 'PATCH',
+        });
+    },
+
+};
