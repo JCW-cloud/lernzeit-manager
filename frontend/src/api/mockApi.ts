@@ -1,10 +1,12 @@
 
-import type { Course, CourseInput, LearningGoal, LearningGoalInput } from './types';
-import { mockCourses, mockLearningGoals } from './mock';
+import { ApiError } from './client';
+import type { Course, CourseInput, LearningGoal, LearningGoalInput, StudySession } from './types';
+import { mockCourses, mockLearningGoals, mockSessions } from './mock';
 
 // Arbeitskopie von Mock
 let courses: Course[] = [...mockCourses];
 let goals: LearningGoal[] = [...mockLearningGoals];
+let sessions: StudySession[] = [...mockSessions];
 
 function delay<T>(value: T): Promise<T> {
     return new Promise(resolve => {
@@ -21,6 +23,31 @@ function cleanText(value: string | null): string | null {
         return null;
     }
     return trimmed;
+}
+
+function secondsSince(iso: string): number {
+    return Math.floor((Date.now() - Date.parse(iso)) / 1000);
+}
+
+function withElapsed(session: StudySession): StudySession {
+    let total = session.accumulatedSeconds;
+    if(session.status === 'Running' && session.currentRunStartedAtUtc !== null) {
+        total = total + secondsSince(session.currentRunStartedAtUtc);
+    }
+    return {...session, elapsedSeconds:total};
+}
+
+function replaceSession(updated: StudySession): void {
+    sessions = sessions.map(session => {
+        if(session.id === updated.id) {
+            return updated;
+        }
+        return session;
+    });
+}
+
+function findSession(courseId: string, id:string): StudySession | undefined {
+    return sessions.find(session => session.id === id && session.courseId === courseId);
 }
 
 
@@ -54,7 +81,7 @@ export const mockApi = {
     updateCourse(id: string, input: CourseInput): Promise<Course> {
         const existing = courses.find(course => course.id === id);
         if(existing === undefined) {
-            return Promise.reject(new Error ('Kurs nicht gefunden.'));
+            return Promise.reject(new ApiError (404, 'Kurs nicht gefunden.'));
         }
         
         const updated: Course = {
@@ -112,7 +139,7 @@ export const mockApi = {
     setGoalCompleted(courseId: string, goalId: string, isCompleted: boolean): Promise<LearningGoal> {
         const existing = goals.find(goal => goal.id === goalId && goal.courseId === courseId);
         if(existing === undefined) {
-            return Promise.reject(new Error('Ziel nicht gefunden.'));
+            return Promise.reject(new ApiError(404, 'Ziel nicht gefunden.'));
         }
 
         let completedAt: string | null = null;
@@ -142,6 +169,128 @@ export const mockApi = {
     deleteGoal(courseId: string, goalId: string): Promise<void> {
         goals = goals.filter(goal => !(goal.id === goalId && goal.courseId === courseId));
         return delay(undefined);
+    },
+
+    // =========================== Lernzeiten ===========================
+    // GET /api/courses/{courseId}/study-sessions
+    getStudySessions(courseId: string): Promise<StudySession[]> {
+        const ofCourse = sessions
+            .filter(session => session.courseId === courseId)
+            .map(withElapsed);
+        return delay(ofCourse);
+    },
+
+    // POST /api/courses/{courseId}/study-sessions/manual
+    createManualSession(courseId: string, minutes: number): Promise<StudySession> {
+        const seconds = minutes * 60;
+        const session: StudySession = {
+            id: crypto.randomUUID(),
+            courseId: courseId,
+            type: 'Manual',
+            status: 'Completed',
+            createdAtUtc: new Date().toISOString(),
+            startedAtUtc: null,
+            currentRunStartedAtUtc: null,
+            accumulatedSeconds: seconds,
+            endedAtUtc: null,
+            elapsedSeconds: seconds,
+        };
+        sessions.push(session);
+        return delay(session);
+    },
+
+    // POST /api/courses/{courseId}/study-sessions/timer/start
+    startTimer(courseId: string): Promise<StudySession> {
+        const active = sessions.find(session => {
+            return session.courseId === courseId && session.type === 'Timer' && session.status !== 'Completed';
+        });
+        if (active !== undefined) {
+            return Promise.reject(new ApiError(409, 'Für diesen Kurs läuft bereits ein Timer.'));
+        }
+
+        const now = new Date().toISOString();
+        const session: StudySession = {
+            id: crypto.randomUUID(),
+            courseId: courseId,
+            type: 'Timer',
+            status: 'Running',
+            createdAtUtc: now,
+            startedAtUtc: now,
+            currentRunStartedAtUtc: now,
+            accumulatedSeconds: 0,
+            endedAtUtc: null,
+            elapsedSeconds: 0,
+        };
+        sessions.push(session);
+        return delay(session);
+    },
+
+    // PATCH …/{id}/pause
+    pauseTimer(courseId: string, id: string): Promise<StudySession> {
+        const existing = findSession(courseId, id);
+        if (existing === undefined) {
+            return Promise.reject(new ApiError(404, 'Timer nicht gefunden.'));
+        }
+        if (existing.status !== 'Running' || existing.currentRunStartedAtUtc === null) {
+            return Promise.reject(new ApiError(409, 'Der Timer läuft nicht.'));
+        }
+
+        // Laufenden Abschnitt zur gespeicherten Zeit addieren
+        const updated: StudySession = withElapsed({
+            ...existing,
+            status: 'Paused',
+            accumulatedSeconds: existing.accumulatedSeconds + secondsSince(existing.currentRunStartedAtUtc),
+            currentRunStartedAtUtc: null,
+        });
+        replaceSession(updated);
+        return delay(updated);
+    },
+
+    // PATCH …/{id}/resume
+    resumeTimer(courseId: string, id: string): Promise<StudySession> {
+        const existing = findSession(courseId, id);
+        if (existing === undefined) {
+            return Promise.reject(new ApiError(404, 'Timer nicht gefunden.'));
+        }
+        if (existing.status !== 'Paused') {
+            return Promise.reject(new ApiError(409, 'Der Timer ist nicht pausiert.'));
+        }
+
+        const updated: StudySession = withElapsed({
+            ...existing,
+            status: 'Running',
+            currentRunStartedAtUtc: new Date().toISOString(),
+        });
+        replaceSession(updated);
+        return delay(updated);
+    },
+
+    // PATCH …/{id}/stop
+    stopTimer(courseId: string, id: string): Promise<StudySession> {
+        const existing = findSession(courseId, id);
+        if (existing === undefined) {
+            return Promise.reject(new ApiError(404, 'Timer nicht gefunden.'));
+        }
+        if (existing.status === 'Completed') {
+            return Promise.reject(new ApiError(409, 'Der Timer ist bereits beendet.'));
+        }
+
+        // Läuft er noch, zählt der letzte Abschnitt dazu
+        let total = existing.accumulatedSeconds;
+        if (existing.status === 'Running' && existing.currentRunStartedAtUtc !== null) {
+            total = total + secondsSince(existing.currentRunStartedAtUtc);
+        }
+
+        const updated: StudySession = {
+            ...existing,
+            status: 'Completed',
+            accumulatedSeconds: total,
+            currentRunStartedAtUtc: null,
+            endedAtUtc: new Date().toISOString(),
+            elapsedSeconds: total,
+        };
+        replaceSession(updated);
+        return delay(updated);
     },
 
 };

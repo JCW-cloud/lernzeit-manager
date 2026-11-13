@@ -51,6 +51,23 @@ export interface LearningGoalInput {
     targetHours: number | null;
 }
 
+// ------------ Lernzeiten (gelernt) ------------
+export type StudySessionType = 'Timer' | 'Manual';
+export type StudySessionStatus = 'Running' | 'Paused' | 'Completed';
+
+export interface StudySession {
+    id: string;
+    courseId: string;
+    type: StudySessionType;
+    status: StudySessionStatus;
+    createdAtUtc: string;
+    startedAtUtc: string | null;            // nur beim Timer
+    currentRunStartedAtUtc: string | null;  
+    accumulatedSeconds: number;             
+    endedAtUtc: string | null;
+    elapsedSeconds: number;     
+}
+
 
 // ------------------- Auth --------------------
 export interface LoginRequest {
