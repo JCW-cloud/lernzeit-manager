@@ -30,7 +30,7 @@ export default function DashboardPage() {
 
     let trackingContent;
     if(loading) {
-        trackingContent = <p className="tracking-status">Kurse werden geladen …</p>;
+        trackingContent = <p className="tracking-status">Kurse werden geladen...</p>;
     } else if (error !== null) {
         trackingContent = <p className="tracking-status">{error}</p>;
     } else if (courses.length === 0) {

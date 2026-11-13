@@ -6,6 +6,7 @@ import { api } from '../api';
 import { errorText } from '../api/client';
 import type { Course } from '../api/types';
 import RoughPlan from '../features/planning/RoughPlan';
+import MonthPlan from '../features/planning/MonthPlan';
 import '../features/planning/planning.css';
 
 
@@ -30,12 +31,16 @@ export default function PlanningPage() {
     }, []);
 
     let roughContent;
+    let monthContent;
     if(loading) {
         roughContent = <p className="planning-status">Kurse werden geladen...</p>;
+        monthContent = null;
     } else if (error !== null) {
-        roughContent = <p className="plannung-status">{error}</p>;
+        roughContent = <p className="planning-status">{error}</p>;
+        monthContent = null;
     } else {
         roughContent = <RoughPlan courses={courses} />;
+        monthContent = <MonthPlan courses={courses} />;
     }
     
     return(
@@ -48,8 +53,8 @@ export default function PlanningPage() {
             </section>
 
             <section>
-                <h2>Monatsplaung</h2>
-                <p className="planning-status">Folgt...</p>
+                <h2>Monatsplanung</h2>
+                {monthContent}
             </section>
         </div>
         

@@ -20,7 +20,7 @@
 .tracking-column {
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 24px;
 }
 
 .tracking-column h3 {
@@ -43,6 +43,7 @@
     background: #ffffff;
     border: 1px solid #d1d5db;
     border-radius: 10px;
+    appearance: none;
 }
 
 .tracking-column select:disabled {

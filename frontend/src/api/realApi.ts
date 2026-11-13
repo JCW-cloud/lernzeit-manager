@@ -1,9 +1,15 @@
 
 import { request } from "./client";
-import type { Course, CourseInput, LearningGoal, LearningGoalInput, StudySession } from './types';
+import type { 
+    Course, CourseInput, LearningGoal, LearningGoalInput, StudySession, PlannedStudySession, PlannedStudySessionInput 
+} from './types';
 
 function sessionsPath(courseId: string): string {
     return '/courses/' + courseId + '/study-sessions';
+}
+
+function plannedPath(courseId: string): string {
+    return '/courses/' + courseId + '/planned-sessions';
 }
 
 export const realApi = {
@@ -104,6 +110,28 @@ export const realApi = {
     stopTimer(courseId: string, id: string): Promise<StudySession> {
         return request<StudySession>(sessionsPath(courseId) + '/' + id + '/stop', {
             method: 'PATCH',
+        });
+    },
+
+    // =========================== Geplante Lernzeiten =================================
+    //GET
+    getPlannedSessions(courseId: string): Promise<PlannedStudySession[]> {
+        return request<PlannedStudySession[]>(plannedPath(courseId));
+    },
+
+    //POST
+    // Antwort wird bewusst nicht verwendet, das Frontend lädt danach neu
+    async createPlannedSession(courseId: string, input: PlannedStudySessionInput): Promise<void> {
+        await request<unknown>(plannedPath(courseId), {
+            method: 'POST',
+            body: JSON.stringify(input),
+        });
+    },
+
+    //DELETE
+    deletePlannedSession(courseId: string, id: string): Promise<void> {
+        return request<void>(plannedPath(courseId) + '/' + id, {
+            method: 'DELETE',
         });
     },
 

@@ -1,4 +1,4 @@
-import type { Course, LearningGoal, StudySession } from './types';
+import type { Course, LearningGoal, StudySession, PlannedStudySession } from './types';
 
 export const mockCourses: Course[] = [
     {
@@ -101,5 +101,40 @@ export const mockSessions: StudySession[] = [
         startedAtUtc: '2026-11-08T14:00:00Z',
         endedAtUtc: '2026-11-08T16:10:00Z',
         elapsedSeconds: 7200,     // 2 Stunden
+    },
+];
+
+export const mockPlannedSessions: PlannedStudySession[] = [
+    {
+        id: 'dddd0001-0000-0000-0000-000000000000',
+        courseId: '22222222-2222-2222-2222-222222222222',
+        date: '2026-11-10',
+        startTime: '14:00:00',
+        plannedDurationMinutes: 150,
+        note: null,
+    },
+    {
+        id: 'dddd0002-0000-0000-0000-000000000000',
+        courseId: '11111111-1111-1111-1111-111111111111',
+        date: '2026-11-16',
+        startTime: '09:00:00',
+        plannedDurationMinutes: 120,
+        note: null,
+    },
+    {
+        id: 'dddd0003-0000-0000-0000-000000000000',
+        courseId: '22222222-2222-2222-2222-222222222222',
+        date: '2026-11-20',
+        startTime: '18:00:00',
+        plannedDurationMinutes: 90,
+        note: null,
+    },
+    {
+        id: 'dddd0004-0000-0000-0000-000000000000',
+        courseId: '11111111-1111-1111-1111-111111111111',
+        date: '2026-12-03',
+        startTime: '10:00:00',
+        plannedDurationMinutes: 120,
+        note: null,
     },
 ];

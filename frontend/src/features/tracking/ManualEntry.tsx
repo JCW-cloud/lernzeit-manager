@@ -58,7 +58,7 @@ export default function ManualEntry({ courses }: ManualEntryProps) {
                 required
                 onChange={event => setCourseId(event.target.value)}
             >
-                <option value="">Kurs wählen …</option>
+                <option value="">Kurs wählen...</option>
                 {courses.map(course => (
                     <option key={course.id} value={course.id}>
                         {courseLabel(course)} – {course.title}
@@ -81,7 +81,7 @@ export default function ManualEntry({ courses }: ManualEntryProps) {
             </label>
 
             <button type="submit" className="btn-submit" disabled={busy}>
-                {busy ? 'Speichern …' : 'Erfassen'}
+                {busy ? 'Speichern...' : 'Erfassen'}
             </button>
 
             {message !== null && <p className="tracking-success">{message}</p>}
