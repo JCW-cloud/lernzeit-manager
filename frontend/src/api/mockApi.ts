@@ -3,10 +3,19 @@ import { ApiError } from './client';
 import type { Course, CourseInput, LearningGoal, LearningGoalInput, StudySession } from './types';
 import { mockCourses, mockLearningGoals, mockSessions } from './mock';
 
-// Arbeitskopie von Mock
+type MockSession = StudySession & {
+    currentRunStartedAtUtc: string | null;
+    accumulatedSeconds: number;
+};
+
 let courses: Course[] = [...mockCourses];
 let goals: LearningGoal[] = [...mockLearningGoals];
-let sessions: StudySession[] = [...mockSessions];
+
+let sessions: MockSession[] = mockSessions.map(session => ({
+    ...session,
+    currentRunStartedAtUtc: null,
+    accumulatedSeconds: session.elapsedSeconds,
+}));
 
 function delay<T>(value: T): Promise<T> {
     return new Promise(resolve => {
@@ -15,11 +24,11 @@ function delay<T>(value: T): Promise<T> {
 }
 
 function cleanText(value: string | null): string | null {
-    if(value === null){
+    if (value === null) {
         return null;
     }
     const trimmed = value.trim();
-    if (trimmed === ''){
+    if (trimmed === '') {
         return null;
     }
     return trimmed;
@@ -29,27 +38,36 @@ function secondsSince(iso: string): number {
     return Math.floor((Date.now() - Date.parse(iso)) / 1000);
 }
 
-function withElapsed(session: StudySession): StudySession {
+function toResponse(session: MockSession): StudySession {
     let total = session.accumulatedSeconds;
-    if(session.status === 'Running' && session.currentRunStartedAtUtc !== null) {
+    if (session.status === 'Running' && session.currentRunStartedAtUtc !== null) {
         total = total + secondsSince(session.currentRunStartedAtUtc);
     }
-    return {...session, elapsedSeconds:total};
+
+    return {
+        id: session.id,
+        courseId: session.courseId,
+        type: session.type,
+        status: session.status,
+        createdAtUtc: session.createdAtUtc,
+        startedAtUtc: session.startedAtUtc,
+        endedAtUtc: session.endedAtUtc,
+        elapsedSeconds: total,
+    };
 }
 
-function replaceSession(updated: StudySession): void {
+function replaceSession(updated: MockSession): void {
     sessions = sessions.map(session => {
-        if(session.id === updated.id) {
+        if (session.id === updated.id) {
             return updated;
         }
         return session;
     });
 }
 
-function findSession(courseId: string, id:string): StudySession | undefined {
+function findSession(courseId: string, id: string): MockSession | undefined {
     return sessions.find(session => session.id === id && session.courseId === courseId);
 }
-
 
 export const mockApi = {
 
@@ -83,7 +101,7 @@ export const mockApi = {
         if(existing === undefined) {
             return Promise.reject(new ApiError(404, 'Kurs nicht gefunden.'));
         }
-        
+
         const updated: Course = {
             ...existing,
             title: input.title.trim(),
@@ -171,32 +189,33 @@ export const mockApi = {
         return delay(undefined);
     },
 
-    // =========================== Lernzeiten ===========================
+    // =================== Lernzeiten ===================
+
     // GET /api/courses/{courseId}/study-sessions
     getStudySessions(courseId: string): Promise<StudySession[]> {
         const ofCourse = sessions
             .filter(session => session.courseId === courseId)
-            .map(withElapsed);
+            .map(toResponse);
         return delay(ofCourse);
     },
 
     // POST /api/courses/{courseId}/study-sessions/manual
     createManualSession(courseId: string, minutes: number): Promise<StudySession> {
         const seconds = minutes * 60;
-        const session: StudySession = {
+        const session: MockSession = {
             id: crypto.randomUUID(),
             courseId: courseId,
             type: 'Manual',
             status: 'Completed',
             createdAtUtc: new Date().toISOString(),
             startedAtUtc: null,
-            currentRunStartedAtUtc: null,
-            accumulatedSeconds: seconds,
             endedAtUtc: null,
             elapsedSeconds: seconds,
+            currentRunStartedAtUtc: null,
+            accumulatedSeconds: seconds,
         };
         sessions.push(session);
-        return delay(session);
+        return delay(toResponse(session));
     },
 
     // POST /api/courses/{courseId}/study-sessions/timer/start
@@ -209,20 +228,20 @@ export const mockApi = {
         }
 
         const now = new Date().toISOString();
-        const session: StudySession = {
+        const session: MockSession = {
             id: crypto.randomUUID(),
             courseId: courseId,
             type: 'Timer',
             status: 'Running',
             createdAtUtc: now,
             startedAtUtc: now,
-            currentRunStartedAtUtc: now,
-            accumulatedSeconds: 0,
             endedAtUtc: null,
             elapsedSeconds: 0,
+            currentRunStartedAtUtc: now,
+            accumulatedSeconds: 0,
         };
         sessions.push(session);
-        return delay(session);
+        return delay(toResponse(session));
     },
 
     // PATCH …/{id}/pause
@@ -235,15 +254,14 @@ export const mockApi = {
             return Promise.reject(new ApiError(409, 'Der Timer läuft nicht.'));
         }
 
-        // Laufenden Abschnitt zur gespeicherten Zeit addieren
-        const updated: StudySession = withElapsed({
+        const updated: MockSession = {
             ...existing,
             status: 'Paused',
             accumulatedSeconds: existing.accumulatedSeconds + secondsSince(existing.currentRunStartedAtUtc),
             currentRunStartedAtUtc: null,
-        });
+        };
         replaceSession(updated);
-        return delay(updated);
+        return delay(toResponse(updated));
     },
 
     // PATCH …/{id}/resume
@@ -256,13 +274,13 @@ export const mockApi = {
             return Promise.reject(new ApiError(409, 'Der Timer ist nicht pausiert.'));
         }
 
-        const updated: StudySession = withElapsed({
+        const updated: MockSession = {
             ...existing,
             status: 'Running',
             currentRunStartedAtUtc: new Date().toISOString(),
-        });
+        };
         replaceSession(updated);
-        return delay(updated);
+        return delay(toResponse(updated));
     },
 
     // PATCH …/{id}/stop
@@ -275,22 +293,19 @@ export const mockApi = {
             return Promise.reject(new ApiError(409, 'Der Timer ist bereits beendet.'));
         }
 
-        // Läuft er noch, zählt der letzte Abschnitt dazu
         let total = existing.accumulatedSeconds;
         if (existing.status === 'Running' && existing.currentRunStartedAtUtc !== null) {
             total = total + secondsSince(existing.currentRunStartedAtUtc);
         }
 
-        const updated: StudySession = {
+        const updated: MockSession = {
             ...existing,
             status: 'Completed',
             accumulatedSeconds: total,
             currentRunStartedAtUtc: null,
             endedAtUtc: new Date().toISOString(),
-            elapsedSeconds: total,
         };
         replaceSession(updated);
-        return delay(updated);
+        return delay(toResponse(updated));
     },
-
 };

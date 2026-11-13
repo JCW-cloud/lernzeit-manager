@@ -45,8 +45,8 @@ export const mockLearningGoals: LearningGoal[] = [
         targetHours: 10,
         isCompleted: true,
         completedAtUtc: '2026-10-25T18:00:00Z',
-  },
-  {
+    },
+    {
         id: 'aaaa0002-0000-0000-0000-000000000000',
         courseId: '11111111-1111-1111-1111-111111111111',
         title: 'Anforderungen dokumentiert',
@@ -56,8 +56,8 @@ export const mockLearningGoals: LearningGoal[] = [
         targetHours: 12.5,
         isCompleted: true,
         completedAtUtc: '2026-11-02T20:00:00Z',
-  },
-  {
+    },
+    {
         id: 'aaaa0003-0000-0000-0000-000000000000',
         courseId: '11111111-1111-1111-1111-111111111111',
         title: 'Prototyp steht',
@@ -67,8 +67,8 @@ export const mockLearningGoals: LearningGoal[] = [
         targetHours: 20,
         isCompleted: false,
         completedAtUtc: null,
-  },
-  {
+    },
+    {
         id: 'bbbb0001-0000-0000-0000-000000000000',
         courseId: '22222222-2222-2222-2222-222222222222',
         title: 'Kapitel 1 bis 3 lernen',
@@ -78,32 +78,28 @@ export const mockLearningGoals: LearningGoal[] = [
         targetHours: 15,
         isCompleted: false,
         completedAtUtc: null,
-  },
+    },
 ];
 
 export const mockSessions: StudySession[] = [
-  {
-    id: 'cccc0001-0000-0000-0000-000000000000',
-    courseId: '11111111-1111-1111-1111-111111111111',
-    type: 'Manual',
-    status: 'Completed',
-    createdAtUtc: '2026-11-03T18:00:00Z',
-    startedAtUtc: null,
-    currentRunStartedAtUtc: null,
-    accumulatedSeconds: 5400,     // 90 Minuten
-    endedAtUtc: null,
-    elapsedSeconds: 5400,
-  },
-  {
-    id: 'cccc0002-0000-0000-0000-000000000000',
-    courseId: '22222222-2222-2222-2222-222222222222',
-    type: 'Timer',
-    status: 'Completed',
-    createdAtUtc: '2026-11-08T14:00:00Z',
-    startedAtUtc: '2026-11-08T14:00:00Z',
-    currentRunStartedAtUtc: null,
-    accumulatedSeconds: 7200,     // 2 Stunden
-    endedAtUtc: '2026-11-08T16:10:00Z',
-    elapsedSeconds: 7200,
-  },
+    {
+        id: 'cccc0001-0000-0000-0000-000000000000',
+        courseId: '11111111-1111-1111-1111-111111111111',
+        type: 'Manual',
+        status: 'Completed',
+        createdAtUtc: '2026-11-03T18:00:00Z',
+        startedAtUtc: null,
+        endedAtUtc: null,
+        elapsedSeconds: 5400,     // 90 Minuten
+    },
+    {
+        id: 'cccc0002-0000-0000-0000-000000000000',
+        courseId: '22222222-2222-2222-2222-222222222222',
+        type: 'Timer',
+        status: 'Completed',
+        createdAtUtc: '2026-11-08T14:00:00Z',
+        startedAtUtc: '2026-11-08T14:00:00Z',
+        endedAtUtc: '2026-11-08T16:10:00Z',
+        elapsedSeconds: 7200,     // 2 Stunden
+    },
 ];

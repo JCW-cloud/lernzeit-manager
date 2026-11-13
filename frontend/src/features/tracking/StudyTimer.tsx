@@ -14,7 +14,8 @@ interface StudyTimerProps {
 export default function StudyTimer({ courses }: StudyTimerProps) {
     const [courseId, setCourseId] = useState('');
     const [session, setSession] = useState<StudySession | null>(null);
-    const [now, setNow] = useState(Date.now());
+    const [now, setNow] = useState(() => Date.now());
+    const [receivedAt, setReceivedAt] = useState(() => Date.now());
 
     const [loading, setLoading] = useState(true);
     const [busy, setBusy] = useState(false);
@@ -44,6 +45,7 @@ export default function StudyTimer({ courses }: StudyTimerProps) {
                 if (active.length > 0) {
                     active.sort((a, b) => a.createdAtUtc.localeCompare(b.createdAtUtc));
                     setSession(active[0]);
+                    setReceivedAt(Date.now());
                     setCourseId(active[0].courseId);
                     setNow(Date.now());
                 }
@@ -77,6 +79,7 @@ export default function StudyTimer({ courses }: StudyTimerProps) {
         try {
             const updated = await action();
             setSession(updated);
+            setReceivedAt(Date.now());
             setNow(Date.now());
         } catch (err) {
             setError(errorText(err));
@@ -115,7 +118,7 @@ export default function StudyTimer({ courses }: StudyTimerProps) {
             if (course !== undefined) {
                 label = courseLabel(course);
             }
-            setMessage(formatMinutes(stopped.accumulatedSeconds) + ' für ' + label + ' erfasst.');
+            setMessage(formatMinutes(stopped.elapsedSeconds) + ' für ' + label + ' erfasst.');
 
             // Timer zurücksetzen
             setSession(null);
@@ -133,7 +136,7 @@ export default function StudyTimer({ courses }: StudyTimerProps) {
 
     let seconds = 0;
     if (session !== null) {
-        seconds = currentSeconds(session, now);
+        seconds = currentSeconds(session, receivedAt, now);
     }
 
     const active = session !== null;

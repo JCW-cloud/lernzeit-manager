@@ -61,10 +61,8 @@ export interface StudySession {
     type: StudySessionType;
     status: StudySessionStatus;
     createdAtUtc: string;
-    startedAtUtc: string | null;            // nur beim Timer
-    currentRunStartedAtUtc: string | null;
-    accumulatedSeconds: number;
-    endedAtUtc: string | null;
+    startedAtUtc: string | null;   // nur beim Timer
+    endedAtUtc: string | null;     // erst nach dem Stoppen
     elapsedSeconds: number;
 }
 

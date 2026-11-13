@@ -1,21 +1,20 @@
 
 import type { Course, StudySession } from '../../api/types';
 
-// aktuelle Lernzeit in Sek
-export function currentSeconds(session: StudySession, nowMs: number): number {
-    let total = session.accumulatedSeconds;
-
-    if(session.status === 'Running' && session.currentRunStartedAtUtc !== null) {
-        const runSeconds = Math.floor((nowMs - Date.parse(session.currentRunStartedAtUtc)) / 1000);
-        total = total + Math.max(0, runSeconds);
+// Aktuelle Lernzeit in Sek
+export function currentSeconds(session: StudySession, receivedAtMs: number, nowMs: number): number {
+    if (session.status !== 'Running') {
+        return session.elapsedSeconds;
     }
-    return total;
+
+    const sinceReceived = Math.floor((nowMs - receivedAtMs) / 1000);
+    return session.elapsedSeconds + Math.max(0, sinceReceived);
 }
 
-// sek als Uhr
+// Sekunden als Uhr
 export function formatClock(totalSeconds: number): string {
     const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);   // % = Rest der Division
     const seconds = totalSeconds % 60;
 
     return String(hours).padStart(2, '0') + ':'
@@ -23,7 +22,7 @@ export function formatClock(totalSeconds: number): string {
         + String(seconds).padStart(2, '0');
 }
 
-// Sekunden als Minutentext
+// Sekunden als Text für die Bestätigung
 export function formatMinutes(totalSeconds: number): string {
     const minutes = Math.round(totalSeconds / 60);
     if (minutes < 1) {
@@ -32,11 +31,10 @@ export function formatMinutes(totalSeconds: number): string {
     return minutes + ' min';
 }
 
-// Kurzname Kurs
+// Kurzname eines Kurses
 export function courseLabel(course: Course): string {
     if (course.description !== null) {
         return course.description;
     }
     return course.title;
 }
-
