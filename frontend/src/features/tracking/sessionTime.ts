@@ -1,5 +1,5 @@
 
-import type { Course, StudySession } from "../../api/types";
+import type { Course, StudySession } from '../../api/types';
 
 // aktuelle Lernzeit in Sek
 export function currentSeconds(session: StudySession, nowMs: number): number {
@@ -15,7 +15,7 @@ export function currentSeconds(session: StudySession, nowMs: number): number {
 // sek als Uhr
 export function formatClock(totalSeconds: number): string {
     const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 60) /60);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
 
     return String(hours).padStart(2, '0') + ':'
@@ -34,9 +34,9 @@ export function formatMinutes(totalSeconds: number): string {
 
 // Kurzname Kurs
 export function courseLabel(course: Course): string {
-  if (course.description !== null) {
-    return course.description;
-  }
-  return course.title;
+    if (course.description !== null) {
+        return course.description;
+    }
+    return course.title;
 }
 

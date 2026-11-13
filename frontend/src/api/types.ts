@@ -62,10 +62,10 @@ export interface StudySession {
     status: StudySessionStatus;
     createdAtUtc: string;
     startedAtUtc: string | null;            // nur beim Timer
-    currentRunStartedAtUtc: string | null;  
-    accumulatedSeconds: number;             
+    currentRunStartedAtUtc: string | null;
+    accumulatedSeconds: number;
     endedAtUtc: string | null;
-    elapsedSeconds: number;     
+    elapsedSeconds: number;
 }
 
 

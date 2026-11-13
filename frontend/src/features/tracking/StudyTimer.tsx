@@ -12,7 +12,7 @@ interface StudyTimerProps {
 }
 
 export default function StudyTimer({ courses }: StudyTimerProps) {
-     const [courseId, setCourseId] = useState('');
+    const [courseId, setCourseId] = useState('');
     const [session, setSession] = useState<StudySession | null>(null);
     const [now, setNow] = useState(Date.now());
 
@@ -56,7 +56,7 @@ export default function StudyTimer({ courses }: StudyTimerProps) {
         findActive();
     }, [courses]);
 
-    // Jede Sekunde anzeigen solagne laufend
+    // Jede Sekunde anzeigen solange laufend
     useEffect(() => {
         if (session === null || session.status !== 'Running') {
             return;   // nichts zu zählen
@@ -146,50 +146,50 @@ export default function StudyTimer({ courses }: StudyTimerProps) {
 
     return (
         <div className="tracking-column">
-        <h3>Timer</h3>
+            <h3>Timer</h3>
 
-        {/* Gesperrt, solange ein Timer läuft oder pausiert ist */}
-        <select
-            value={courseId}
-            disabled={active || busy}
-            onChange={event => setCourseId(event.target.value)}
-        >
-            <option value="">Kurs wählen …</option>
-            {courses.map(course => (
-                <option key={course.id} value={course.id}>
-                    {courseLabel(course)} – {course.title}
-                </option>
-            ))}
-        </select>
-
-        <div className="timer-clock">{formatClock(seconds)}</div>
-
-        <div className="timer-buttons">
-            <button
-                className="btn-start"
-                disabled={courseId === '' || active || busy}
-                onClick={handleStart}
+            {/* Gesperrt, solange ein Timer läuft oder pausiert ist */}
+            <select
+                value={courseId}
+                disabled={active || busy}
+                onChange={event => setCourseId(event.target.value)}
             >
-            Start
-            </button>
-            <button
-                className="btn-pause"
-                disabled={!active || busy}
-                onClick={handlePauseOrResume}
-            >
-                {pauseLabel}
-            </button>
-            <button
-                className="btn-stop"
-                disabled={!active || busy}
-                onClick={handleStop}
-            >
-                Stopp
-            </button>
-        </div>
+                <option value="">Kurs wählen …</option>
+                {courses.map(course => (
+                    <option key={course.id} value={course.id}>
+                        {courseLabel(course)} – {course.title}
+                    </option>
+                ))}
+            </select>
 
-        {message !== null && <p className="tracking-success">{message}</p>}
-        {error !== null && <p className="tracking-error">{error}</p>}
+            <div className="timer-clock">{formatClock(seconds)}</div>
+
+            <div className="timer-buttons">
+                <button
+                    className="btn-start"
+                    disabled={courseId === '' || active || busy}
+                    onClick={handleStart}
+                >
+                    Start
+                </button>
+                <button
+                    className="btn-pause"
+                    disabled={!active || busy}
+                    onClick={handlePauseOrResume}
+                >
+                    {pauseLabel}
+                </button>
+                <button
+                    className="btn-stop"
+                    disabled={!active || busy}
+                    onClick={handleStop}
+                >
+                    Stopp
+                </button>
+            </div>
+
+            {message !== null && <p className="tracking-success">{message}</p>}
+            {error !== null && <p className="tracking-error">{error}</p>}
         </div>
     );
 }

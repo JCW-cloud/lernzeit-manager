@@ -57,7 +57,7 @@
 /* Timer */
 
 .timer-clock {
-    margin: 0 0;
+    margin: 0;
     font-family: ui-monospace, 'SF Mono', Menlo, monospace;
     font-size: 64px;
     text-align: center;
@@ -93,9 +93,9 @@
 }
 
 .btn-stop {
-  color: #ffffff;
-  background: #cd1a1a;
-  border: none;
+    color: #ffffff;
+    background: #cd1a1a;
+    border: none;
 }
 
 .btn-submit {

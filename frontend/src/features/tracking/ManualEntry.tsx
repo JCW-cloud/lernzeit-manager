@@ -1,5 +1,5 @@
 
-// Manuell Lernzeiten nachtragen
+// Lernzeiten manuell nachtragen
 
 import { useState } from 'react';
 import { api } from '../../api';

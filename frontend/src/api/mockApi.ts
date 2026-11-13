@@ -81,7 +81,7 @@ export const mockApi = {
     updateCourse(id: string, input: CourseInput): Promise<Course> {
         const existing = courses.find(course => course.id === id);
         if(existing === undefined) {
-            return Promise.reject(new ApiError (404, 'Kurs nicht gefunden.'));
+            return Promise.reject(new ApiError(404, 'Kurs nicht gefunden.'));
         }
         
         const updated: Course = {
