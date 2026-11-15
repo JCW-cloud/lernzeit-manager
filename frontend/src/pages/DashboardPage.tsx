@@ -8,6 +8,7 @@ import type { Course } from '../api/types';
 import StudyTimer from '../features/tracking/StudyTimer';
 import ManualEntry from '../features/tracking/ManualEntry';
 import CourseSummary from '../features/overview/CourseSummary';
+import CalendarOverview from '../features/overview/CalendarOverview';
 import '../features/tracking/tracking.css';
 import '../features/overview/overview.css';
 
@@ -65,10 +66,17 @@ export default function DashboardPage() {
                 {trackingContent}
             </section>
             {summaryContent !== null && (
-                <section className="summary-card">
-                    <h2>Kursübersicht</h2>
-                    {summaryContent}
-                </section>
+                <>
+                    <section className="summary-card">
+                        <h2>Kalenderübersicht</h2>
+                        <CalendarOverview courses={courses} />
+                    </section>
+
+                    <section className="summary-card">
+                        <h2>Kursübersicht</h2>
+                        {summaryContent}
+                    </section>
+                </>
             )}
 
         </div>
