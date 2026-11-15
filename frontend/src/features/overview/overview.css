@@ -1,0 +1,82 @@
+/* Karte Kursübersicht */
+
+.summary-card {
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+}
+
+.summary-card h2 {
+    margin: 0 0 24px 0;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+/* ==================== Eine Kurskarte ======================= */
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px 24px;
+    background: #fbf8f2;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+}
+
+/* Abschluss vorbei */
+.summary-item.past {
+    opacity: 0.5;
+}
+
+.summary-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.summary-header h3 {
+    margin: 0;
+    font-size: 19px;
+}
+
+.summary-date {
+    margin-left: auto;
+    font-size: 15px;
+    color: #6b7280;
+    white-space: nowrap;
+}
+
+/* Spalten */
+.summary-row {
+    display: grid;
+    grid-template-columns: 140px 130px 1fr;
+    align-items: center;
+    gap: 16px;
+    font-size: 16px;
+}
+
+.summary-label {
+    color: #6b7280;
+}
+
+/* Fortschrittsbalken */
+
+.progress {
+    height: 8px;
+    background: #eef0f2;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #007c59;
+    border-radius: 4px;
+}

@@ -27,10 +27,10 @@ export const mockCourses: Course[] = [
         title: 'IT-Sicherheit',
         description: 'DLBISA01',
         createdAtUtc: '2026-10-02T10:00:00Z',
-        targetDate: null,              // noch kein Zieldatum
-        examType: null,                // Prüfungsart noch offen
+        targetDate: '2027-03-31',
+        examType: 'WrittenExam',
         examTry: null,
-        expectedTimeMinutes: null,     // Aufwand noch nicht geschätzt
+        expectedTimeMinutes: 7200,     // 120 Stunden
     },
 ];
 
