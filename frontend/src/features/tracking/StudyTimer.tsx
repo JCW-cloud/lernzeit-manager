@@ -131,7 +131,7 @@ export default function StudyTimer({ courses }: StudyTimerProps) {
 
     // Anzeige
     if (loading) {
-        return <p className="tracking-status">Timer wird geladen …</p>;
+        return <p className="tracking-status">Timer wird geladen...</p>;
     }
 
     let seconds = 0;
@@ -157,7 +157,7 @@ export default function StudyTimer({ courses }: StudyTimerProps) {
                 disabled={active || busy}
                 onChange={event => setCourseId(event.target.value)}
             >
-                <option value="">Kurs wählen …</option>
+                <option value="">Kurs wählen...</option>
                 {courses.map(course => (
                     <option key={course.id} value={course.id}>
                         {courseLabel(course)} – {course.title}

@@ -66,8 +66,24 @@ export interface StudySession {
     elapsedSeconds: number;
 }
 
+// ------------- Geplante Lernzeiten ------------
+export interface PlannedStudySession {
+    id: string;
+    courseId: string;
+    date: string;                   // "2026-11-20"
+    startTime: string;              // "18:00:00", mit Sekunden
+    plannedDurationMinutes: number; // Dauer statt Endzeit
+    note: string | null;            // im Frontend nicht verwendet
+}
 
-// ------------------- Auth --------------------
+export interface PlannedStudySessionInput {
+    date: string;
+    startTime: string;
+    plannedDurationMinutes: number;
+    note: string | null;
+}
+
+// ------------------- Auth ---------------------
 export interface LoginRequest {
     email: string;
     password: string;

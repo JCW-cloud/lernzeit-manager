@@ -1,7 +1,9 @@
 
 import { ApiError } from './client';
-import type { Course, CourseInput, LearningGoal, LearningGoalInput, StudySession } from './types';
-import { mockCourses, mockLearningGoals, mockSessions } from './mock';
+import type { 
+    Course, CourseInput, LearningGoal, LearningGoalInput, StudySession, PlannedStudySession, PlannedStudySessionInput 
+} from './types';
+import { mockCourses, mockLearningGoals, mockSessions, mockPlannedSessions } from './mock';
 
 type MockSession = StudySession & {
     currentRunStartedAtUtc: string | null;
@@ -10,12 +12,12 @@ type MockSession = StudySession & {
 
 let courses: Course[] = [...mockCourses];
 let goals: LearningGoal[] = [...mockLearningGoals];
-
 let sessions: MockSession[] = mockSessions.map(session => ({
     ...session,
     currentRunStartedAtUtc: null,
     accumulatedSeconds: session.elapsedSeconds,
 }));
+let plannedSessions: PlannedStudySession[] = [...mockPlannedSessions]; 
 
 function delay<T>(value: T): Promise<T> {
     return new Promise(resolve => {
@@ -124,6 +126,7 @@ export const mockApi = {
     deleteCourse(id: string): Promise<void> {
         courses = courses.filter(course => course.id !== id)
         goals = goals.filter(goal => goal.courseId !== id);
+        plannedSessions = plannedSessions.filter(item => item.courseId !== id);     // bei Kurslöschung Ziele und Lernzeiten mitlöschen
         return delay(undefined);
     },
 
@@ -308,4 +311,31 @@ export const mockApi = {
         replaceSession(updated);
         return delay(toResponse(updated));
     },
+
+    // =========================== Geplante Lernzeiten ==============================
+    // GET /api/courses/{courseId}/planned-sessions
+    getPlannedSessions(courseId: string): Promise<PlannedStudySession[]> {
+        const ofCourse = plannedSessions.filter(item => item.courseId === courseId);
+        return delay(ofCourse);
+    },
+
+    // POST /api/courses/{courseId}/planned-sessions
+    createPlannedSession(courseId: string, input: PlannedStudySessionInput): Promise<void> {
+        const item: PlannedStudySession = {
+            id: crypto.randomUUID(),
+            courseId: courseId,
+            date: input.date,
+            startTime: input.startTime,
+            plannedDurationMinutes: input.plannedDurationMinutes,
+            note: input.note,
+        };
+        plannedSessions.push(item);
+        return delay(undefined);
+    },
+
+    deletePlannedSession(courseId: string, id: string): Promise<void> {
+        plannedSessions = plannedSessions.filter(item => !(item.id === id && item.courseId === courseId));
+        return delay(undefined);
+    },
+
 };

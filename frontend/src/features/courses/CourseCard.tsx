@@ -151,7 +151,7 @@ export default function CourseCard({ course, onUpdated, onDeleted }: CourseCardP
     // ------------------------------- Zwischenziele ---------------------
     let goalContent;
     if(goalsLoading) {
-        goalContent = <p className="course-card-empty">Ziele werden geladen …</p>;
+        goalContent = <p className="course-card-empty">Ziele werden geladen...</p>;
     } else if (goalsError !== null) {
         goalContent = <p className="course-card-empty">{goalsError}</p>;
     } else {
