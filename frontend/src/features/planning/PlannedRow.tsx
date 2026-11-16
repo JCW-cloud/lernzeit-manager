@@ -7,6 +7,7 @@ import { errorText } from '../../api/client';
 import type { PlannedStudySession } from '../../api/types';
 import { formatNumber, formatShortDate } from '../../lib/format';
 import { minutesToTime, timeToMinutes } from './time';
+import { announcePlannedChange } from '../reminders/events';
 
 interface PlannedRowProps {
     planned: PlannedStudySession;
@@ -24,6 +25,7 @@ export default function PlannedRow({ planned, label, today, onDeleted }: Planned
         setBusy(true);
         try {
             await api.deletePlannedSession(planned.courseId, planned.id);
+            announcePlannedChange();
             onDeleted(planned.id);
         } catch (err) {
             setError(errorText(err));

@@ -8,6 +8,7 @@ import type { Course, PlannedStudySessionInput } from '../../api/types';
 import { addMonths, formatShortDate, toIsoDate } from '../../lib/format';
 import { courseLabel } from '../tracking/sessionTime';
 import { timeToMinutes } from './time';
+import { announcePlannedChange } from '../reminders/events';
 
 interface PlannedSessionFormProps {
     courses: Course[];                               // nur Kurse mit Zieldatum ab heute
@@ -59,6 +60,7 @@ export default function PlannedSessionForm({ courses, onCreated }: PlannedSessio
         try {
             await api.createPlannedSession(courseId, input);
             await onCreated(courseId);
+            announcePlannedChange();
 
             // Bestätigung
             setMessage('Lernzeit am ' + formatShortDate(date) + ' hinzugefügt.');
