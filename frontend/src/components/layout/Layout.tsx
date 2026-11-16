@@ -1,6 +1,8 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { clearToken } from '../../lib/auth';
 import './Layout.css';
+import { useReminders } from '../../features/reminders/useReminders';
+import ReminderBanner from '../../features/reminders/ReminderBanner';
 
 // Aktuelle Seite
 function linkClass({ isActive }: { isActive: boolean}): string {
@@ -12,6 +14,7 @@ function linkClass({ isActive }: { isActive: boolean}): string {
 
 export default function Layout() {
     const navigate = useNavigate();
+    const reminders = useReminders();
 
     function handleLogout() {
         clearToken();
@@ -32,6 +35,7 @@ export default function Layout() {
                     Abmelden
                 </button>
             </nav>
+            <ReminderBanner reminders={reminders} />
             <main className="content">
                 <Outlet />
             </main>
