@@ -15,6 +15,7 @@ dist/
 **/appsettings.*.local.json
 **/.env
 **/.env.*
+!frontend/.env.production
 
 # IDE-Dateien
 .vs/
