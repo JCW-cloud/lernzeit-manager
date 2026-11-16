@@ -9,9 +9,10 @@ import { courseLabel } from './sessionTime';
 
 interface ManualEntryProps {
     courses: Course[];
+    onRecorded: () => void;
 }
 
-export default function ManualEntry({ courses }: ManualEntryProps) {
+export default function ManualEntry({ courses, onRecorded }: ManualEntryProps) {
     const [courseId, setCourseId] = useState('');
     const [minutes, setMinutes] = useState('');
 
@@ -42,6 +43,7 @@ export default function ManualEntry({ courses }: ManualEntryProps) {
             await api.createManualSession(courseId, Number(minutes));
             setMessage(minutes + ' min für ' + label + ' erfasst.');
             setMinutes('');
+            onRecorded();
         } catch (err) {
             setError(errorText(err));
         } finally {

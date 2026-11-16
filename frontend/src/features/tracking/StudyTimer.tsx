@@ -9,9 +9,10 @@ import { courseLabel, currentSeconds, formatClock, formatMinutes } from './sessi
 
 interface StudyTimerProps {
     courses: Course[];
+    onRecorded: () => void;
 }
 
-export default function StudyTimer({ courses }: StudyTimerProps) {
+export default function StudyTimer({ courses, onRecorded }: StudyTimerProps) {
     const [courseId, setCourseId] = useState('');
     const [session, setSession] = useState<StudySession | null>(null);
     const [now, setNow] = useState(() => Date.now());
@@ -122,6 +123,7 @@ export default function StudyTimer({ courses }: StudyTimerProps) {
 
             // Timer zurücksetzen
             setSession(null);
+            onRecorded();
         } catch (err) {
             setError(errorText(err));
         } finally {
