@@ -17,7 +17,7 @@ export function nextMonths(count: number): MonthInfo[] {
         result.push({
             year: date.getFullYear(),
             month: date.getMonth(),
-            label: date.toLocaleDateString('de-AT', { month: 'short', year: '2-digit' }),
+            label: date.toLocaleDateString('de-DE', { month: 'short', year: '2-digit' }),
         });
     }  
     return result;

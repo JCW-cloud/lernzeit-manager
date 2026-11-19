@@ -41,7 +41,6 @@ export default function PlannedSessionForm({ courses, onCreated }: PlannedSessio
         setError(null);
         setMessage(null);
 
-        // Dauer aus Von und Bis
         const fromMinutes = timeToMinutes(from);
         const toMinutes = timeToMinutes(to);
         if (toMinutes <= fromMinutes) {
@@ -51,7 +50,7 @@ export default function PlannedSessionForm({ courses, onCreated }: PlannedSessio
 
         const input: PlannedStudySessionInput = {
             date: date,
-            startTime: from + ':00',   // Backend erwartet Sekunden, z. B. "13:00:00"
+            startTime: from + ':00',
             plannedDurationMinutes: toMinutes - fromMinutes,
             note: null,
         };
@@ -63,7 +62,7 @@ export default function PlannedSessionForm({ courses, onCreated }: PlannedSessio
             announcePlannedChange();
 
             // Bestätigung
-            setMessage('Lernzeit am ' + formatShortDate(date) + ' hinzugefügt.');
+            setMessage('Lernzeit am ' + formatShortDate(date) + ' eingeplant.');
 
             // Kurs und Datum bleiben
             setFrom('');
@@ -114,7 +113,7 @@ export default function PlannedSessionForm({ courses, onCreated }: PlannedSessio
             </label>
 
             <button type="submit" disabled={busy}>
-                {busy ? 'Speichern...' : 'Lernzeit hinzufügen'}
+                {busy ? 'Speichern...' : 'Lernzeit einplanen'}
             </button>
 
             {message !== null && <p className="plan-message">{message}</p>}

@@ -164,7 +164,7 @@ export default function CourseEditForm({ course, onSaved, onCancel, onDeleted }:
 
             <div className="course-edit-footer">
                 <span className="course-edit-date">
-                    Zieldatum: {targetDateText} (nicht änderbar)
+                    Zieldatum: {targetDateText}
                 </span>
 
                 <button type="button" className="btn-danger" disabled={busy} onClick={handleDelete}>

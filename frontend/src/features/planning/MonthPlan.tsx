@@ -23,7 +23,7 @@ type Entry =
     | { kind: 'goal'; sortKey: string; goal: LearningGoal };
 
 export default function MonthPlan({ courses }: MonthPlanProps) {
-    const [selectedIndex, setSelectedIndex] = useState(0);   // 0 = aktueller Monat
+    const [selectedIndex, setSelectedIndex] = useState(0);
     const [planned, setPlanned] = useState<PlannedStudySession[]>([]);
     const [goals, setGoals] = useState<LearningGoal[]>([]);
     const [loading, setLoading] = useState(true);

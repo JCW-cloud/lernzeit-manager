@@ -55,6 +55,11 @@
     color: #6b7280;
 }
 
+.tracking-status a {
+    color: #007c59;
+    font-weight: 600;
+}
+
 /* Timer */
 
 .timer-clock {
@@ -130,4 +135,10 @@
     color: #b91c1c;
     background: #fee2e2;
     border-radius: 6px;
+}
+
+@media (max-width: 900px) {
+    .tracking-grid {
+        grid-template-columns: 1fr;
+    }
 }
