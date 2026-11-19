@@ -4,18 +4,20 @@
 import { useState } from 'react';
 import { api } from '../../api';
 import { errorText } from '../../api/client';
-import type { Course, PlannedStudySessionInput } from '../../api/types';
+import type { Course, PlannedStudySession, PlannedStudySessionInput } from '../../api/types';
 import { addMonths, formatShortDate, toIsoDate } from '../../lib/format';
 import { courseLabel } from '../tracking/sessionTime';
-import { timeToMinutes } from './time';
+import { timeToMinutes, minutesToTime } from './time';
 import { announcePlannedChange } from '../reminders/events';
 
 interface PlannedSessionFormProps {
     courses: Course[];                               // nur Kurse mit Zieldatum ab heute
-    onCreated: (courseId: string) => Promise<void>;  // Monatsplanung lädt dann neu
+    existing: PlannedStudySession[];
+    labelFor: (courseId: string) => string;
+    onCreated: (courseId: string) => Promise<void>;
 }
 
-export default function PlannedSessionForm({ courses, onCreated }: PlannedSessionFormProps) {
+export default function PlannedSessionForm({ courses, existing, labelFor, onCreated }: PlannedSessionFormProps) {
 
     const [courseId, setCourseId] = useState('');
     const [date, setDate] = useState('');
@@ -45,6 +47,25 @@ export default function PlannedSessionForm({ courses, onCreated }: PlannedSessio
         const toMinutes = timeToMinutes(to);
         if (toMinutes <= fromMinutes) {
             setError('"Bis" muss nach "Von" liegen.');
+            return;
+        }
+
+        const conflict = existing.find(item => {
+            if (item.date !== date) {
+                return false;
+            }
+            const itemStart = timeToMinutes(item.startTime);
+            const itemEnd = itemStart + item.plannedDurationMinutes;
+            return fromMinutes < itemEnd && itemStart < toMinutes;
+        });
+
+        if (conflict !== undefined) {
+            const start = timeToMinutes(conflict.startTime);
+            const end = start + conflict.plannedDurationMinutes;
+            setError(
+                'Überschneidet sich mit ' + labelFor(conflict.courseId) + ', '
+                + minutesToTime(start) + '–' + minutesToTime(end) + '.'
+            );
             return;
         }
 

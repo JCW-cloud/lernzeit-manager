@@ -88,7 +88,13 @@ export default function MonthPlan({ courses }: MonthPlanProps) {
 
 
     // Formular
-    const form = <PlannedSessionForm courses={activeCourses} onCreated={handleCreated} />;
+    const form = 
+        <PlannedSessionForm 
+            courses={activeCourses} 
+            existing={planned}
+            labelFor={labelFor}
+            onCreated={handleCreated} 
+        />;
 
     if (loading) {
         return (
