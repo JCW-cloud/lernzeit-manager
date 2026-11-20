@@ -65,7 +65,6 @@ export default function CourseForm({ onCreated }: CourseFormProps) {
         }
     }
 
-    // Anzeige
     return(
         <form className="course-form" onSubmit={handleSubmit}>
             <label>

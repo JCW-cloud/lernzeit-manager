@@ -95,7 +95,6 @@ export default function PlannedSessionForm({ courses, existing, labelFor, onCrea
         }
     }
 
-    // ---------- Anzeige ----------
 
     return (
         <form className="plan-form" onSubmit={handleSubmit}>

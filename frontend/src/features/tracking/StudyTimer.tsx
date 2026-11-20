@@ -27,8 +27,6 @@ export default function StudyTimer({ courses, onRecorded }: StudyTimerProps) {
     useEffect(() => {
         async function findActive() {
             try {
-                // Promise.all startet alle
-                // wartet, bis alle fertig sind
                 const lists = await Promise.all(
                     courses.map(course => api.getStudySessions(course.id))
                 );
@@ -131,7 +129,6 @@ export default function StudyTimer({ courses, onRecorded }: StudyTimerProps) {
         }
     }
 
-    // Anzeige
     if (loading) {
         return <p className="tracking-status">Timer wird geladen...</p>;
     }

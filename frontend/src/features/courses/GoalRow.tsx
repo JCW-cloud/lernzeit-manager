@@ -27,7 +27,6 @@ export default function GoalRow({ goal, today, onChanged, onDeleted }: GoalRowPr
         setError(null);
         setBusy(true);
         try {
-            // !goal.isCompleted: genau das Gegenteil vom aktuellen Zustand
             const updated = await api.setGoalCompleted(goal.courseId, goal.id, !goal.isCompleted);
             onChanged(updated);
         } catch (err) {
@@ -53,7 +52,6 @@ export default function GoalRow({ goal, today, onChanged, onDeleted }: GoalRowPr
     }
 
 
-    // ---------- Anzeige ------------------------------------------------
 
     // Überfällig: nicht erledigt und Datum vor heute.
     // Datumstexte "2026-11-05" < "2026-11-10" lassen sich direkt vergleichen.

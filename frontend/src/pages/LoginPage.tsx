@@ -36,7 +36,6 @@ export default function LoginPage() {
 
     }
 
-    // Anzeige
 
     return(
         <div className="auth-page">

@@ -17,7 +17,7 @@ export default function DashboardPage() {
     const [courses, setCourses] = useState<Course[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [refreshKey, setRefreshKey] = useState(0);
+    const [refreshKey, setRefreshKey] = useState(0);   // Hochzählen -> CourseSummary lädt neu
 
     useEffect(() => {
         async function load() {

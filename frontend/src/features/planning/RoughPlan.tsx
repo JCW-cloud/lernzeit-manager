@@ -57,6 +57,7 @@ export default function RoughPlan({ courses }: RoughPlanProps) {
             {visible.map(course => {
                 const targetDate = course.targetDate as string;
 
+                // Zieldatum nach dem letzten Monat: Balken bis zum Rand
                 let end = monthIndex(targetDate, months[0]);
                 if(end > MONTH_COUNT - 1) {
                     end = MONTH_COUNT - 1;
@@ -72,6 +73,7 @@ export default function RoughPlan({ courses }: RoughPlanProps) {
                         />
                     ))}
 
+                        {/* Grid-Linien zählen ab 1, Endlinie exklusiv -> +2 */}
                         <div
                             className="rough-bar"
                             style={{ gridColumn: '1 / ' + (end + 2) }}

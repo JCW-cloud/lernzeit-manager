@@ -52,7 +52,6 @@ export default function CoursesPage(){
         setCourses(prev => prev.filter(course => course.id !== courseId));
     }
 
-    // --------------- Anzeige -------------------
     let content;
     if(loading) {
         content = <p className="courses-status">Kurse werden geladen ...</p>

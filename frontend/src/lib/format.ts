@@ -19,18 +19,7 @@ export function formatNumber(value: number): string {
     return value.toFixed(1).replace('.', ',');
 }
 
-// Minuten zu Stunden
-/*export function formatHours(minutes: number): string {
-    const hours = minutes / 60;
-    
-    if(Number.isInteger(hours)) {
-        return hours + ' h';
-    }
-    // Bei Komma Deutsches Komma
-    return hours.toFixed(1).replace('.',',') + ' h';
-}*/
-
-// Datum grenze
+// Date -> 'YYYY-MM-DD' in lokaler Zeit (toISOString wäre UTC)
 export function toIsoDate(date: Date):string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');

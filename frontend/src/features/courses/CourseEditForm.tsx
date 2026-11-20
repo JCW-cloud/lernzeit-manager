@@ -110,7 +110,6 @@ export default function CourseEditForm({ course, onSaved, onCancel, onDeleted }:
     }
 
 
-    // ---------- Anzeige ------------------------------------------------
 
     let targetDateText = 'kein Zieldatum';
     if (course.targetDate !== null) {

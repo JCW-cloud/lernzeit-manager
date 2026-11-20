@@ -18,6 +18,7 @@ interface MonthPlanProps {
     courses: Course[];
 }
 
+// sortKey: Ziele nur mit Datum -> stehen vor Lernzeiten am selben Tag
 type Entry =
     | { kind: 'planned'; sortKey: string; planned: PlannedStudySession }
     | { kind: 'goal'; sortKey: string; goal: LearningGoal };
