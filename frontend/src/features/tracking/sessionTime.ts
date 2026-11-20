@@ -2,6 +2,7 @@
 import type { Course, StudySession } from '../../api/types';
 
 // Aktuelle Lernzeit in Sek
+// Ab Empfang der Server-Antwort gezählt, damit Client- und Server-Uhr egal sind
 export function currentSeconds(session: StudySession, receivedAtMs: number, nowMs: number): number {
     if (session.status !== 'Running') {
         return session.elapsedSeconds;
@@ -14,7 +15,7 @@ export function currentSeconds(session: StudySession, receivedAtMs: number, nowM
 // Sekunden als Uhr
 export function formatClock(totalSeconds: number): string {
     const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);   // % = Rest der Division
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
 
     return String(hours).padStart(2, '0') + ':'

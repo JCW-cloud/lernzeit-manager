@@ -166,3 +166,9 @@
     width: 16px;
     color: #007c59;
 }
+
+@media (max-width: 900px) {
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+}

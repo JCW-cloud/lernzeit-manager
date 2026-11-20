@@ -4,18 +4,20 @@
 import { useState } from 'react';
 import { api } from '../../api';
 import { errorText } from '../../api/client';
-import type { Course, PlannedStudySessionInput } from '../../api/types';
+import type { Course, PlannedStudySession, PlannedStudySessionInput } from '../../api/types';
 import { addMonths, formatShortDate, toIsoDate } from '../../lib/format';
 import { courseLabel } from '../tracking/sessionTime';
-import { timeToMinutes } from './time';
+import { timeToMinutes, minutesToTime } from './time';
 import { announcePlannedChange } from '../reminders/events';
 
 interface PlannedSessionFormProps {
     courses: Course[];                               // nur Kurse mit Zieldatum ab heute
-    onCreated: (courseId: string) => Promise<void>;  // Monatsplanung lädt dann neu
+    existing: PlannedStudySession[];
+    labelFor: (courseId: string) => string;
+    onCreated: (courseId: string) => Promise<void>;
 }
 
-export default function PlannedSessionForm({ courses, onCreated }: PlannedSessionFormProps) {
+export default function PlannedSessionForm({ courses, existing, labelFor, onCreated }: PlannedSessionFormProps) {
 
     const [courseId, setCourseId] = useState('');
     const [date, setDate] = useState('');
@@ -41,7 +43,6 @@ export default function PlannedSessionForm({ courses, onCreated }: PlannedSessio
         setError(null);
         setMessage(null);
 
-        // Dauer aus Von und Bis
         const fromMinutes = timeToMinutes(from);
         const toMinutes = timeToMinutes(to);
         if (toMinutes <= fromMinutes) {
@@ -49,9 +50,28 @@ export default function PlannedSessionForm({ courses, onCreated }: PlannedSessio
             return;
         }
 
+        const conflict = existing.find(item => {
+            if (item.date !== date) {
+                return false;
+            }
+            const itemStart = timeToMinutes(item.startTime);
+            const itemEnd = itemStart + item.plannedDurationMinutes;
+            return fromMinutes < itemEnd && itemStart < toMinutes;
+        });
+
+        if (conflict !== undefined) {
+            const start = timeToMinutes(conflict.startTime);
+            const end = start + conflict.plannedDurationMinutes;
+            setError(
+                'Überschneidet sich mit ' + labelFor(conflict.courseId) + ', '
+                + minutesToTime(start) + '–' + minutesToTime(end) + '.'
+            );
+            return;
+        }
+
         const input: PlannedStudySessionInput = {
             date: date,
-            startTime: from + ':00',   // Backend erwartet Sekunden, z. B. "13:00:00"
+            startTime: from + ':00',
             plannedDurationMinutes: toMinutes - fromMinutes,
             note: null,
         };
@@ -63,7 +83,7 @@ export default function PlannedSessionForm({ courses, onCreated }: PlannedSessio
             announcePlannedChange();
 
             // Bestätigung
-            setMessage('Lernzeit am ' + formatShortDate(date) + ' hinzugefügt.');
+            setMessage('Lernzeit am ' + formatShortDate(date) + ' eingeplant.');
 
             // Kurs und Datum bleiben
             setFrom('');
@@ -75,7 +95,6 @@ export default function PlannedSessionForm({ courses, onCreated }: PlannedSessio
         }
     }
 
-    // ---------- Anzeige ----------
 
     return (
         <form className="plan-form" onSubmit={handleSubmit}>
@@ -114,7 +133,7 @@ export default function PlannedSessionForm({ courses, onCreated }: PlannedSessio
             </label>
 
             <button type="submit" disabled={busy}>
-                {busy ? 'Speichern...' : 'Lernzeit hinzufügen'}
+                {busy ? 'Speichern...' : 'Lernzeit einplanen'}
             </button>
 
             {message !== null && <p className="plan-message">{message}</p>}

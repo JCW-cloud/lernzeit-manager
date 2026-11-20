@@ -18,7 +18,7 @@ export function monthPrefix(year: number, month: number): string {
 }
 
 export function longMonthLabel(year: number, month: number): string {
-    return new Date(year, month, 1).toLocaleDateString('de-AT', {
+    return new Date(year, month, 1).toLocaleDateString('de-DE', {
         month: 'long',
         year: 'numeric',
     });

@@ -5,7 +5,7 @@
 export type ExamType = 
     | 'WrittenExam' // Klausur
     | 'ModuleExam'  // Modulprüfung
-    | 'Workbook'    // Workbook
+    | 'Workbook'
     | 'TermPaper'   // Hausarbeit
     | 'Thesis';     //Abschlussarbeit
 

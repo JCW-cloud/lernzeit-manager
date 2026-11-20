@@ -119,6 +119,7 @@
 
 .plan-form select,
 .plan-form input {
+    width: 100%;
     padding: 8px 10px;
     font-size: 15px;
     font-family: inherit;
@@ -286,4 +287,13 @@
 
 .month-sum strong {
     color: #111827;
+}
+
+@media (max-width: 900px) {
+    .plan-form {
+        grid-template-columns: 1fr 1fr;
+    }
+    .plan-form button{
+        grid-column: 1 / -1;
+    }
 }

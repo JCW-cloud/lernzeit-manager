@@ -18,12 +18,13 @@ interface MonthPlanProps {
     courses: Course[];
 }
 
+// sortKey: Ziele nur mit Datum -> stehen vor Lernzeiten am selben Tag
 type Entry =
     | { kind: 'planned'; sortKey: string; planned: PlannedStudySession }
     | { kind: 'goal'; sortKey: string; goal: LearningGoal };
 
 export default function MonthPlan({ courses }: MonthPlanProps) {
-    const [selectedIndex, setSelectedIndex] = useState(0);   // 0 = aktueller Monat
+    const [selectedIndex, setSelectedIndex] = useState(0);
     const [planned, setPlanned] = useState<PlannedStudySession[]>([]);
     const [goals, setGoals] = useState<LearningGoal[]>([]);
     const [loading, setLoading] = useState(true);
@@ -88,7 +89,13 @@ export default function MonthPlan({ courses }: MonthPlanProps) {
 
 
     // Formular
-    const form = <PlannedSessionForm courses={activeCourses} onCreated={handleCreated} />;
+    const form = 
+        <PlannedSessionForm 
+            courses={activeCourses} 
+            existing={planned}
+            labelFor={labelFor}
+            onCreated={handleCreated} 
+        />;
 
     if (loading) {
         return (

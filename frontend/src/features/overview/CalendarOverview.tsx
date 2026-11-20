@@ -13,10 +13,12 @@ interface CalendarOverviewProps {
     courses: Course[];
 }
 
+// sortKey: Ziele nur mit Datum -> stehen vor Lernzeiten am selben Tag
 type Entry =
     | { kind: 'planned'; date: string; sortKey: string; planned: PlannedStudySession }
     | { kind: 'goal'; date: string; sortKey: string; goal: LearningGoal };
 
+// Datum selbst zerlegen: new Date('YYYY-MM-DD') wäre UTC
 function dayLabel(iso: string): string {
     const parts = iso.split('-');
     const date = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));

@@ -80,7 +80,7 @@ export function useReminders() {
                     new Notification('Lernzeit-Manager', { body: text, tag: id });
                     return;
                 } catch {
-                    // Leer
+                    // Systemmeldung nicht möglich -> Banner
                 }
             }
             setInApp(prev => [...prev, { id: id, text: text }]);

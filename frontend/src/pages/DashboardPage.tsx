@@ -1,6 +1,7 @@
 
 // Übersicht: Timer + Zusammenfassung
 
+import { Link } from 'react-router-dom'; 
 import { useEffect, useState } from 'react';
 import { api } from '../api';
 import { errorText } from '../api/client';
@@ -16,7 +17,7 @@ export default function DashboardPage() {
     const [courses, setCourses] = useState<Course[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [refreshKey, setRefreshKey] = useState(0);
+    const [refreshKey, setRefreshKey] = useState(0);   // Hochzählen -> CourseSummary lädt neu
 
     useEffect(() => {
         async function load() {
@@ -45,8 +46,8 @@ export default function DashboardPage() {
         trackingContent = <p className="tracking-status">{error}</p>;
         summaryContent = null;
     } else if (courses.length === 0) {
-        trackingContent = <p className="tracking-status">Lege zuerst auf der Seite Kurse einen Kurs an.</p>;
-        summaryContent = null;
+        trackingContent = <p className="tracking-status">Lege zuerst einen Kurs an: <Link to="/kurse">Kurs anlegen</Link></p>;
+        summaryContent = <p className="tracking-status">Noch keine Kurse vorhanden.</p>;
     } else {
         trackingContent = (
             <div className="tracking-grid">
@@ -57,6 +58,8 @@ export default function DashboardPage() {
         summaryContent = <CourseSummary courses={courses} refreshKey={refreshKey} />;
     }
 
+    const showOverviews = !loading && error === null;
+
     return(
         <div className="dashboard-page">
             <h1>Übersicht</h1>
@@ -65,7 +68,7 @@ export default function DashboardPage() {
                 <h2>Zeiterfassung</h2>
                 {trackingContent}
             </section>
-            {summaryContent !== null && (
+            {showOverviews && (
                 <>
                     <section className="summary-card">
                         <h2>Kalenderübersicht</h2>

@@ -38,7 +38,7 @@ function meta(course: Course, plannedHours: number): string {
     }
     if(course.expectedTimeMinutes !== null) {
         const courseHours = course.expectedTimeMinutes / 60;
-        parts.push(formatNumber(plannedHours) + ' von ' + formatNumber(courseHours) + ' h verplant');
+        parts.push(formatNumber(plannedHours) + ' h von ' + formatNumber(courseHours) + ' h verplant');
     } else if(plannedHours > 0) {
         parts.push(formatNumber(plannedHours) + ' h verplant');
     }
@@ -50,8 +50,8 @@ export default function CourseCard({ course, onUpdated, onDeleted }: CourseCardP
     const [goals, setGoals] = useState<LearningGoal[]>([]);
     const [goalsLoading, setGoalsLoading] = useState(true);
     const [goalsError, setGoalsError] = useState<string | null>(null);
-    const [editing, setEditing] = useState(false);   // Edit
-    const [adding, setAdding] = useState(false);     // "+ Ziel hinzufügen"
+    const [editing, setEditing] = useState(false);
+    const [adding, setAdding] = useState(false);
 
     // ------------------ Zwischenziele laden -------------------------
     useEffect(() => {
@@ -197,9 +197,9 @@ export default function CourseCard({ course, onUpdated, onDeleted }: CourseCardP
             {header}
             {goalContent}
             <div className="course-card-final">
-                <span className="course-card-diamond">◆</span>
-                <span>Kurs abgeschlossen</span>
-                <span className="course-card-date">{targetDateText}</span>
+                <span className="course-card-diamond">◇</span>
+                <span>Kursabschluss</span>
+                <span className="course-card-date">bis {targetDateText}</span>
             </div>  
         </article>
     );
