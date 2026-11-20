@@ -3,6 +3,8 @@ using Lernplaner.Api.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.BearerToken;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +34,14 @@ builder.Services
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddAuthorization();
+
+builder.Services.Configure<BearerTokenOptions>(
+    IdentityConstants.BearerScheme,
+    options =>
+    {
+        options.BearerTokenExpiration = TimeSpan.FromHours(8);
+    }
+);
 
 // Controller und OpenAPI
 builder.Services
